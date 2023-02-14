@@ -1,0 +1,26 @@
+{
+    "name": "GenericCANIO",
+    "version": "1.0.0",
+    "description": "Default Implementation fo CAN Bus Communication Protocoll for genereic CANIO Module",
+    "keywords": "CANIO",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/username/hello-world.git"
+    },
+    "authors":
+    [
+      {
+        "name": "Andreas Goth",
+        "email": "andreasgoth@gothtec.de",
+        "url": "https://www.gothtec.eu",
+        "maintainer": true
+      }
+    ],
+    "license": "private",
+    "frameworks": "*",
+    "platforms": "*",
+    "build": {
+        "srcDir": "."
+    }
+  }

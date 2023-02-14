@@ -1,12 +1,18 @@
 
-#include "Generic_CANIO\Generic_CANIO.h"
+#include "Generic_CANIO.h"
 #define CAN_ID_PGN_RX_CMD	        0xEF00L
 #define CAN_ID_PGN_TX_BC            0xFFBBL
 #define CAN_ID_DEFAULT_SA           0xCC
-uint8_t Generic_CAN_SourceID = CAN_ID_DEFAULT_SA;
-void                HAL_CAN_SendMsg(tst_CAN_Msg *Data);
+#define CAN_ID_DEFAULT_SPEEED       250E3
+uint8_t     Generic_CAN_SourceID = CAN_ID_DEFAULT_SA;
+uint32_t    Generic_CAN_BusSpeed = CAN_ID_DEFAULT_SPEEED;
 
-//##################### LIB Funktionen #####################
+
+//############################################################# Externe Deklarationen #################################################################
+void                HAL_CAN_SendMsg(tst_CANIO_Msg *Data);
+
+//############################################################# IB Funktionen #################################################################
+
 uint32_t    Generic_CAN_Switch_RXTX     (uint32_t CanId)
 {
     uint32_t newCanID = 0 + ((uint32_t)CAN_ID_PGN_RX_CMD << 8);
@@ -23,25 +29,25 @@ uint32_t    Generic_CAN_Switch_RXTX     (uint32_t CanId)
     return newCanID;
 
 }
-int         Generic_CAN_isValid         (tst_CAN_Msg CanRXMessage)
+int         Generic_CAN_isValid         (tst_CANIO_Msg CanRXMessage)
 {
     if(CanRXMessage.id == 0) return 0;
     if(CanRXMessage.len == 0) return 0;
     return 1;
 }
-tst_CAN_Msg Generic_CAN_clear           (void)
+tst_CANIO_Msg Generic_CAN_clear           (void)
 {
     int i=0;
-    tst_CAN_Msg ClearMessage;
+    tst_CANIO_Msg ClearMessage;
     for(i=0; i<8; i++) ClearMessage.data[i] = 0xFF;
     ClearMessage.id = 0;
     ClearMessage.len = 0;
     return ClearMessage;
 }
 
-tst_CAN_Msg CAN_0xFF_CMD_FEHLER(tst_CAN_Msg CanRxMessage)
+tst_CANIO_Msg CAN_0xFF_CMD_FEHLER(tst_CANIO_Msg CanRxMessage)
 {
-    tst_CAN_Msg CanTxMessage = Generic_CAN_clear();
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
     
     CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
     CanTxMessage.len = 8;
@@ -58,11 +64,15 @@ tst_CAN_Msg CAN_0xFF_CMD_FEHLER(tst_CAN_Msg CanRxMessage)
     return  CanTxMessage;
 }
 
+//############################################################# SYSTEM Funktionen #################################################################
 
-//##################### SYSTEM Funktionen //#####################
 void        Generic_CAN_Init(uint8_t Source_ID)
 {
     Generic_CAN_SourceID = Source_ID;
+}
+uint32_t    Generic_CAN_GetRxCANid(void)
+{
+    return 0x18000000 + CAN_ID_PGN_RX_CMD << 8 + Generic_CAN_SourceID;
 }
 size_t      Generic_CAN_GetSizeOfList(void)
 {
@@ -87,9 +97,9 @@ int         Generic_CAN_SearchHandler(uint8_t MUX0)
     }while(1);
     return -1;
 }
-tst_CAN_Msg Generic_CAN_HandleMessage(tst_CAN_Msg CanRxMessage)
+tst_CANIO_Msg Generic_CAN_HandleMessage(tst_CANIO_Msg CanRxMessage)
 {    
-    tst_CAN_Msg CanTxMessage = Generic_CAN_clear();
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
     int index = Generic_CAN_SearchHandler(CanRxMessage.data[0]);
 
     if(index >= 0)
@@ -108,8 +118,8 @@ tst_CAN_Msg Generic_CAN_HandleMessage(tst_CAN_Msg CanRxMessage)
 void        Generic_CAN_CycliqMessage(void)
 {    
     static size_t index = 0;
-    tst_CAN_Msg CanTxMessage = Generic_CAN_clear();
-    tst_CAN_Msg CanRXMessage = Generic_CAN_clear();            
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    tst_CANIO_Msg CanRXMessage = Generic_CAN_clear();            
     
     
     if(index >= Generic_CAN_GetSizeOfList()) index = 0;
@@ -141,4 +151,5 @@ void        Generic_CAN_CycliqMessage(void)
 }
 
 
-
+//################# WENN die Source-Datei nicht autoamtisch compiliert werden kann #################
+#include "Generic_CANIO_user.c"
