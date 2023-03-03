@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCANExplorerProject Version="5.0" Name="Generic_CANIO">
+    <Connections AutoReset="0" IgnoreRTRLength="0" ProcessRTR="1" ProcessJ1939Requests="1" CTSPacksCount="255" ReCTSCount="3" RTSPacksCount="255" RetriesCount="3">
+        <Connection Bus="1" Enabled="1" Protocol="1" CalcBusLoad="1" SymbolsFileName="GenericCANIO.sym" BitRate="284" J1939Name="0" ClaimAddressOnStartup="0" PreferredAddress="0" Monitoring="1" AddressingProtocolEnabled="0" ReassembleIncomingPackets="1" Connection="Unbenannt@pcan_usb" Name="Verbindung1"/>
+    </Connections>
+    <MessageFilters/>
+    <TransmitList>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="10" Creator="Benutzer" DA="204" Destination="204"/>
+    </TransmitList>
+    <Files>
+        <File RelativePath="GenericCANIO.sym"/>
+    </Files>
+</PCANExplorerProject>

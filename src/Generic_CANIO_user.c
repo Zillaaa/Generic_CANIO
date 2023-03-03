@@ -113,7 +113,7 @@ uint32_t            HAL_SYS_GET_Millis          (void)
     return millis();
 }
 
-ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint16_t *pReadValue)
+ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint32_t *pReadValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
     uint16_t readValue = 0;
@@ -125,7 +125,7 @@ ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint16_t *pReadV
         {
             float resultmA = 0;
             result = HAL_OutputCurrGetmA(IOList[index].HAL_ID, &resultmA); 
-            readValue = (uint16_t) (resultmA * 1000);            
+            readValue = (uint16_t) (resultmA * 10);            
         }break;
 
     }
@@ -353,7 +353,7 @@ tst_CANIO_Msg CAN_0x10_INPUT_GET(tst_CANIO_Msg CanRxMessage)
     tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
     ten_CanErrorList result = CANIO_ERR_OK;
     uint8_t IO_Selector = 0;
-    uint16_t InputValue = 0;    
+    uint32_t InputValue = 0;    
     
     CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
     CanTxMessage.len = 8;
@@ -401,6 +401,106 @@ tst_CANIO_Msg CAN_0x20_OUTPUT_SET(tst_CANIO_Msg CanRxMessage)
 
     return  CanTxMessage;
 }
+tst_CANIO_Msg CAN_0x21_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;
+    uint32_t NewValue = 0;
+    uint16_t MagicNumber = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+
+    if(HAL_IO_GET_Input(0, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(1, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(2, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(3, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(4, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(5, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) NewValue;    
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0x22_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;
+    uint32_t NewValue = 0;
+    uint16_t MagicNumber = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+
+    if(HAL_IO_GET_Input( 6, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input( 7, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input( 8, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input( 9, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(10, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(11, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) NewValue;    
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0x23_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;
+    uint32_t NewValue = 0;
+    uint16_t MagicNumber = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+
+    if(HAL_IO_GET_Input(12, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(13, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(14, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(15, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0x2F_OUTPUT_SAVESTATE(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;
+    uint16_t SafeStateValue = 0;
+    uint16_t MagicNumber = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[1] = CanRxMessage.data[1]; // IO_Selector
+    CanTxMessage.data[2] = CanRxMessage.data[2]; // SafeState
+    CanTxMessage.data[3] = CanRxMessage.data[3]; // SafeState
+    CanTxMessage.data[4] = CanRxMessage.data[4]; // MagicNumber
+    CanTxMessage.data[5] = CanRxMessage.data[5]; // MagicNumber
+
+    IO_Selector = CanTxMessage.data[1];
+    SafeStateValue = (uint16_t)(((uint32_t) CanRxMessage.data[2] << 0) + ((uint32_t) CanRxMessage.data[3] << 8));
+    MagicNumber = (uint16_t)(((uint32_t) CanRxMessage.data[4] << 0) + ((uint32_t) CanRxMessage.data[5] << 8));
+
+    if(MagicNumber == CAN_ID_MUX_0XB2_MAGIC)
+    {
+        if(IO_Selector < HAL_IO_GET_ListSize()) CanTxMessage.data[7] = (uint8_t) HAL_IO_SET_Output_Safe(IO_Selector, SafeStateValue);
+        else                                    CanTxMessage.data[7] = CANIO_ERR_INDEX_NOTFOUND;
+    } 
+    else result = CANIO_ERR_MAGICNUMBER_FAIL;
+    CanTxMessage.data[7] = (uint8_t) result;
+
+    return  CanTxMessage;
+}
+
 tst_CANIO_Msg CAN_0xA0_CMD_BAUDRATE(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
@@ -465,38 +565,6 @@ tst_CANIO_Msg CAN_0xA2_CMD_TX_CYCLE(tst_CANIO_Msg CanRxMessage)
 
     return  CanTxMessage;
 }
-tst_CANIO_Msg CAN_0xB2_CMD_OUT_SAVESTATE(tst_CANIO_Msg CanRxMessage)
-{
-    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
-    ten_CanErrorList result = CANIO_ERR_OK;
-    uint8_t IO_Selector = 0;
-    uint16_t SafeStateValue = 0;
-    uint16_t MagicNumber = 0;
-    
-    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
-    CanTxMessage.len = 8;
-    
-    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
-    CanTxMessage.data[1] = CanRxMessage.data[1]; // IO_Selector
-    CanTxMessage.data[2] = CanRxMessage.data[2]; // SafeState
-    CanTxMessage.data[3] = CanRxMessage.data[3]; // SafeState
-    CanTxMessage.data[4] = CanRxMessage.data[4]; // MagicNumber
-    CanTxMessage.data[5] = CanRxMessage.data[5]; // MagicNumber
-
-    IO_Selector = CanTxMessage.data[1];
-    SafeStateValue = (uint16_t)(((uint32_t) CanRxMessage.data[2] << 0) + ((uint32_t) CanRxMessage.data[3] << 8));
-    MagicNumber = (uint16_t)(((uint32_t) CanRxMessage.data[4] << 0) + ((uint32_t) CanRxMessage.data[5] << 8));
-
-    if(MagicNumber == CAN_ID_MUX_0XB2_MAGIC)
-    {
-        if(IO_Selector < HAL_IO_GET_ListSize()) CanTxMessage.data[7] = (uint8_t) HAL_IO_SET_Output_Safe(IO_Selector, SafeStateValue);
-        else                                    CanTxMessage.data[7] = CANIO_ERR_INDEX_NOTFOUND;
-    } 
-    else result = CANIO_ERR_MAGICNUMBER_FAIL;
-    CanTxMessage.data[7] = (uint8_t) result;
-
-    return  CanTxMessage;
-}
 
 
 tst_CAN_Handler_Entry CanHandlerList[] = 
@@ -519,11 +587,15 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0x10  , 0 , 200   , 0 , 0 , CAN_0x10_INPUT_GET                },
     // Output                 
     { 0x20  , 0 , 0     , 0 , 0 , CAN_0x20_OUTPUT_SET               },
+    { 0x21  , 1 , 1000  , 0 , 0 , CAN_0x21_OUTPUT_STATUS            },
+    { 0x22  , 1 , 1000  , 0 , 0 , CAN_0x22_OUTPUT_STATUS            },
+    { 0x23  , 1 , 1000  , 0 , 0 , CAN_0x23_OUTPUT_STATUS            },
+    { 0x2F  , 0 , 0     , 0 , 0 , CAN_0x2F_OUTPUT_SAVESTATE         },
     // Allgemeine Steuerger�te Befehle
     { 0xA0  , 0 , 0     , 0 , 0 , CAN_0xA0_CMD_BAUDRATE             },
     { 0xA1  , 0 , 0     , 0 , 0 , CAN_0xA1_CMD_SOURCE_ADR           },
     { 0xA2  , 0 , 0     , 0 , 0 , CAN_0xA2_CMD_TX_CYCLE             },
    // Projekt spezifische Befehle
-    { 0xB2  , 0 , 0     , 0 , 0 , CAN_0xB2_CMD_OUT_SAVESTATE        },
+    
     { 0xFF  , 0 , 0     , 0 , 0 , NULL                              },  // NICHT VER�NDERN!!!!
 };
