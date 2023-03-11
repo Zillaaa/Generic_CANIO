@@ -7,7 +7,8 @@ enum Generic_CANIO_CMD_Result(0="CANIO_ERR_OK", 1="CANIO_ERR_UNKOWN",
   4="CANIO_ERR_NOTFOUND", 5="CANIO_ERR_MAGICNUMBER_FAIL", 
   6="CANIO_ERR_UNSUPPORTED", 7="CANIO_ERR_INDEX_NOTFOUND", 
   8="CANIO_ERR_OUTPUT_DISABLED", 9="CANIO_ERR_EEP_PATTERNWRONG", 
-  10="CANIO_ERR_EEP_CHECKSUMWRONG", 11="CANIO_ERR_INDEX_OUTOFRANGE")
+  10="CANIO_ERR_EEP_CHECKSUMWRONG", 11="CANIO_ERR_INDEX_OUTOFRANGE", 
+  12="CANIO_ERR_INDEX_NOT_OUTPUT")
 
 {SENDRECEIVE}
 
@@ -87,14 +88,17 @@ Mux=CAN_0x00_BC_PING 0,8 0
 Var=CAN_0x00_BC_Runtime unsigned 8,8 /u:s
 Var=CAN_0x00_BC_CAN_RX unsigned 16,8 /u:x
 Var=CAN_0x00_BC_CAN_TX unsigned 24,8 /u:x
-Var=CAN_0x00_BC_CAN_OF unsigned 32,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_TX unsigned 32,8 /u:x
+Var=CAN_0x00_BC_CAN_CMD unsigned 48,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_RX unsigned 40,8 /u:x
+Var=CAN_0x00_BC_SYS_CURR unsigned 56,8 /u:mA
 
 [GENERIC_CANIO_BROADCAST]
 Mux=CAN_0x21_BC_OUTPUT_STATUS 0,8 21h
 Var=CAN_0x21_OUTPUT_Value0 unsigned 8,8 /u:mA /f:0.1
 Var=CAN_0x21_OUTPUT_Value1 unsigned 16,8 /u:mA /f:0.1
 Var=CAN_0x21_OUTPUT_Value2 unsigned 24,8 /u:mA /f:0.1
-Var=CAN_0x21_OUTPUT_Value3 unsigned 32,8 /u:mA /f:0.1 /o:0.1
+Var=CAN_0x21_OUTPUT_Value3 unsigned 32,8 /u:mA /f:0.1
 Var=CAN_0x21_OUTPUT_Value4 unsigned 40,8 /u:mA /f:0.1
 Var=CAN_0x21_OUTPUT_Value5 unsigned 48,8 /u:mA /f:0.1
 Var=CAN_0x21_OUTPUT_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
@@ -115,4 +119,18 @@ Var=CAN_0x23_OUTPUT_Value13 unsigned 8,8 /u:mA /f:0.1
 Var=CAN_0x23_OUTPUT_Value14 unsigned 16,8 /u:mA /f:0.1
 Var=CAN_0x23_OUTPUT_Value15 unsigned 24,8 /u:mA /f:0.1
 Var=CAN_0x23_OUTPUT_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0xD1_CMD_TaskHandle 0,8 D1h
+Var=CAN_0xD1_CMD_Task0 unsigned 8,16 /u:ms
+Var=CAN_0xD1_CMD_Task1 unsigned 24,16 /u:ms
+Var=CAN_0xD1_CMD_Task2 unsigned 40,16 /u:ms
+Var=CAN_0xD1_CMD_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0xD2_CMD_TaskHandle 0,8 D2h
+Var=CAN_0xD2_CMD_Task3 unsigned 8,16 /u:ms
+Var=CAN_0xD2_CMD_Task4 unsigned 24,16 /u:ms
+Var=CAN_0xD2_CMD_Task5 unsigned 40,16 /u:ms
+Var=CAN_0xD2_CMD_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
 

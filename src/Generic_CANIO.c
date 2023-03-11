@@ -70,9 +70,9 @@ void        Generic_CAN_Init(uint8_t Source_ID)
 {
     Generic_CAN_SourceID = Source_ID;
 }
-uint32_t    Generic_CAN_GetRxCANid(void)
+uint32_t    Generic_CAN_GetRxCANid(uint8_t SenderID)
 {
-    return 0x18000000 + CAN_ID_PGN_RX_CMD << 8 + Generic_CAN_SourceID;
+    return 0x18000000 + (CAN_ID_PGN_RX_CMD << 8) + ((uint16_t)Generic_CAN_SourceID << 8) + SenderID;
 }
 size_t      Generic_CAN_GetSizeOfList(void)
 {

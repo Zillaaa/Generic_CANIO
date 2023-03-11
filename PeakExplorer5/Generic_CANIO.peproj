@@ -5,7 +5,22 @@
     </Connections>
     <MessageFilters/>
     <TransmitList>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="10" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="10" CycleTime="100" IsPaused="1" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2010000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2011000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2012000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2013000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2014000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2015000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2016000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2017000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2018000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2019000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="201A000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="201B000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="201C000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="201D000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="201E000018DC" Creator="Benutzer" DA="204" Destination="204"/>
     </TransmitList>
     <Files>
         <File RelativePath="GenericCANIO.sym"/>

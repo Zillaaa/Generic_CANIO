@@ -1,4 +1,4 @@
-
+#include <../../include/main.h>
 #include "Generic_CANIO.h"
 #define CAN_ID_MUX_0XB1_MAGIC       57411
 #define CAN_ID_MUX_0XB2_MAGIC       8874
@@ -36,14 +36,13 @@ void                HAL_CMD_PING_Data(uint8_t *pData);
 tst_IO_List_Entry IOList[] = 
 {
     //IO_Type;
-    //              HAL_ID;    
-    //              |               Enabled;        Output Only, Deaktiviert das �ndern des Ausgangszustands
-    //              |               |   SafeValue;  Output Only, Wird im Fehlerfall oder beim Start Eingestellt
-    //              |               |   |   actualValue;                    Der zuletzt bekannte Zustand
-    //              |               |   |   |   actualValue_MIN;            Zustandswert MIN Wert
-    //              |               |   |   |   |   actualValue_MAX;                     MAX Wert
-    //              |               |   |   |   |   |       actualValue_TS; Zeitpunkt der letzten Zustands-Wert-�nderung
-   
+    //                 HAL_ID;    
+    //                 |   Enabled;        Output Only, Deaktiviert das �ndern des Ausgangszustands
+    //                 |   |   SafeValue;  Output Only, Wird im Fehlerfall oder beim Start Eingestellt
+    //                 |   |   |   actualValue;                    Der zuletzt bekannte Zustand
+    //                 |   |   |   |   actualValue_MIN;            Zustandswert MIN Wert
+    //                 |   |   |   |   |   actualValue_MAX;                     MAX Wert
+    //                 |   |   |   |   |   |       actualValue_TS; Zeitpunkt der letzten Zustands-Wert-�nderung  
     {IO_INPUT_CURR  ,  0 , 0 , 0 , 0 , 0 , 30000  , 0},   // 0
     {IO_INPUT_CURR  ,  1 , 0 , 0 , 0 , 0 , 30000  , 0},
     {IO_INPUT_CURR  ,  2 , 0 , 0 , 0 , 0 , 30000  , 0},
@@ -60,22 +59,22 @@ tst_IO_List_Entry IOList[] =
     {IO_INPUT_CURR  , 13 , 0 , 0 , 0 , 0 , 30000  , 0},
     {IO_INPUT_CURR  , 14 , 0 , 0 , 0 , 0 , 30000  , 0},
     {IO_INPUT_CURR  , 15 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  0 , 0 , 0 , 0 , 0 , 30000  , 0},   // 16
-    {IO_OUTPUT_CURR ,  1 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  2 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  3 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  4 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  5 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  6 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  7 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  8 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR ,  9 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 10 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 11 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 12 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 13 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 14 , 0 , 0 , 0 , 0 , 30000  , 0},
-    {IO_OUTPUT_CURR , 15 , 0 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  0 , 1 , 0 , 0 , 0 , 30000  , 0},   // 16
+    {IO_OUTPUT_CURR ,  1 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  2 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  3 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  4 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  5 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  6 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  7 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  8 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR ,  9 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 10 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 11 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 12 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 13 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 14 , 1 , 0 , 0 , 0 , 30000  , 0},
+    {IO_OUTPUT_CURR , 15 , 1 , 0 , 0 , 0 , 30000  , 0},
     {IO_UNKOWN      , 0             , 0 , 0 , 0 , 0 , 0     , 0}
 };
 
@@ -116,7 +115,7 @@ uint32_t            HAL_SYS_GET_Millis          (void)
 ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint32_t *pReadValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
-    uint16_t readValue = 0;
+    uint32_t readValue = 0;
     if(index >= HAL_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
     switch(IOList[index].IO_Type)
     {
@@ -124,32 +123,32 @@ ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint32_t *pReadV
         case IO_INPUT_CURR: 
         {
             float resultmA = 0;
-            result = HAL_OutputCurrGetmA(IOList[index].HAL_ID, &resultmA); 
-            readValue = (uint16_t) (resultmA * 10);            
+            if(HAL_OutputCurrGetmA(IOList[index].HAL_ID, &resultmA))
+            {
+                readValue = 0xFFFFFFFF;
+                result = CANIO_ERR_INDEX_NOTFOUND;
+            }
+            else
+            {
+                readValue = (uint32_t) (resultmA * 1000.0);            
+            }
+            *pReadValue = readValue;
         }break;
-
     }
 
-    if(result == CANIO_ERR_OK)
-    {
-        if(readValue > IOList[index].actualValue_MAX) readValue = IOList[index].actualValue_MAX;
-        if(readValue < IOList[index].actualValue_MIN) readValue = IOList[index].actualValue_MIN;
-        IOList[index].actualValue = readValue;
-        IOList[index].actualValue_TS = HAL_SYS_GET_Millis();
-        *pReadValue = readValue;
-    }
-
-    
     return result;
 }
 ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, uint16_t newValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
     if(index >= HAL_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
+    if( (IOList[index].IO_Type != IO_OUTPUT_CURR) && 
+        (IOList[index].IO_Type != IO_OUTPUT_PROM) && 
+        (IOList[index].IO_Type != IO_OUTPUT_SW)     ) return CANIO_ERR_INDEX_NOT_OUTPUT; 
     if(IOList[index].Enabled == 0) 
     {
         newValue = IOList[index].SafeValue;
-        result = CANIO_ERR_OUTPUT_DISABLED;
+        return CANIO_ERR_OUTPUT_DISABLED;
     }
     if(IOList[index].actualValue_MIN > newValue) newValue = IOList[index].actualValue_MIN;
     if(IOList[index].actualValue_MAX < newValue) newValue = IOList[index].actualValue_MAX;
@@ -159,14 +158,21 @@ ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, uint16_t newValu
         case IO_OUTPUT_CURR:      
         {
             float newfValue = newValue / 1000.0;
-            result = HAL_OutputCurrSetmA(IOList[index].HAL_ID, &newfValue);
-            newValue = (uint16_t) (newfValue * 1000);
+            if(HAL_OutputCurrSetmA(IOList[index].HAL_ID, &newfValue))
+            {
+                newValue = 0xFFFF;
+                result = CANIO_ERR_INDEX_NOTFOUND;
+            }
+            else 
+            {
+                newValue = (uint16_t) (newfValue * 1000.0);
+                IOList[index].actualValue = newValue;
+                IOList[index].actualValue_TS = HAL_SYS_GET_Millis();
+            }
         }break;
-        default: result = CANIO_ERR_UNSUPPORTED;
+        default: result = CANIO_ERR_UNSUPPORTED; break;
     }
 
-    IOList[index].actualValue = newValue;
-    IOList[index].actualValue_TS = HAL_SYS_GET_Millis();
     
     
     return result;
@@ -361,11 +367,13 @@ tst_CANIO_Msg CAN_0x10_INPUT_GET(tst_CANIO_Msg CanRxMessage)
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[1] = CanRxMessage.data[1]; // IO_Selector
     IO_Selector = CanTxMessage.data[1];
-    if(IO_Selector < HAL_IO_GET_ListSize()) CanTxMessage.data[7] = (uint8_t)HAL_IO_GET_Input(IO_Selector, &InputValue);
-    else                                    CanTxMessage.data[7] = CANIO_ERR_INDEX_NOTFOUND;
+    if(IO_Selector < HAL_IO_GET_ListSize()) result = (uint8_t)HAL_IO_GET_Input(IO_Selector, &InputValue);
+    else                                    result = CANIO_ERR_INDEX_NOTFOUND;
     CanTxMessage.data[2] = (uint8_t) (InputValue >> 0);
     CanTxMessage.data[3] = (uint8_t) (InputValue >> 8);
-    
+    CanTxMessage.data[4] = (uint8_t) (InputValue >> 16);
+    CanTxMessage.data[5] = (uint8_t) (InputValue >> 24);
+    CanTxMessage.data[7] = (uint8_t) result;
 
     return  CanTxMessage;
 }
@@ -393,8 +401,8 @@ tst_CANIO_Msg CAN_0x20_OUTPUT_SET(tst_CANIO_Msg CanRxMessage)
 
     if(MagicNumber == CAN_ID_MUX_0X20_MAGIC)
     {
-        if(IO_Selector < HAL_IO_GET_ListSize()) CanTxMessage.data[7] = (uint8_t) HAL_IO_SET_Output(IO_Selector, NewValue);
-        else                                    CanTxMessage.data[7] = CANIO_ERR_INDEX_NOTFOUND;
+        if(IO_Selector < HAL_IO_GET_ListSize()) result= (uint8_t) HAL_IO_SET_Output(IO_Selector, NewValue);
+        else                                    result = CANIO_ERR_INDEX_NOTFOUND;
     } 
     else result = CANIO_ERR_MAGICNUMBER_FAIL;
     CanTxMessage.data[7] = (uint8_t) result;
@@ -405,21 +413,19 @@ tst_CANIO_Msg CAN_0x21_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
     ten_CanErrorList result = CANIO_ERR_OK;
-    uint8_t IO_Selector = 0;
     uint32_t NewValue = 0;
-    uint16_t MagicNumber = 0;
     
     CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
     CanTxMessage.len = 8;
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
 
-    if(HAL_IO_GET_Input(0, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(1, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(2, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(3, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(4, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(5, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) NewValue;    
+    if(HAL_IO_GET_Input(0, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(1, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(2, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(3, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(4, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(5, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
     CanTxMessage.data[7] = CANIO_ERR_OK;
 
     return  CanTxMessage;
@@ -437,12 +443,12 @@ tst_CANIO_Msg CAN_0x22_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
 
-    if(HAL_IO_GET_Input( 6, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input( 7, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input( 8, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input( 9, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(10, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(11, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) NewValue;    
+    if(HAL_IO_GET_Input( 6, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input( 7, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input( 8, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input( 9, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(10, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(11, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255; 
     CanTxMessage.data[7] = CANIO_ERR_OK;
 
     return  CanTxMessage;
@@ -460,10 +466,10 @@ tst_CANIO_Msg CAN_0x23_OUTPUT_STATUS(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
 
-    if(HAL_IO_GET_Input(12, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(13, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(14, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) NewValue;
-    if(HAL_IO_GET_Input(15, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) NewValue;
+    if(HAL_IO_GET_Input(12, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(13, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(14, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
+    if(HAL_IO_GET_Input(15, &NewValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (NewValue < 25400) ? (NewValue / 100) : 255;
     CanTxMessage.data[7] = CANIO_ERR_OK;
 
     return  CanTxMessage;
@@ -565,7 +571,62 @@ tst_CANIO_Msg CAN_0xA2_CMD_TX_CYCLE(tst_CANIO_Msg CanRxMessage)
 
     return  CanTxMessage;
 }
+tst_CANIO_Msg CAN_0xD0_CMD_TaskHandle(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    uint8_t Selector = 0;
+    uint16_t CycleTimer_ms = 0;
+    int index = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[7] = CANIO_ERR_NOTIMPLEMENTED;
 
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0xD1_CMD_TaskHandle(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    uint8_t Selector = 0;
+    uint16_t CycleTimer_ms = 0;
+    int index = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[1] = (uint8_t) (SysStatus.Tasks[TASK_LOOP].updateRate_ms >> 0);
+    CanTxMessage.data[2] = (uint8_t) (SysStatus.Tasks[TASK_LOOP].updateRate_ms >> 8);
+    CanTxMessage.data[3] = (uint8_t) (SysStatus.Tasks[TASK_CAN].updateRate_ms >> 0);
+    CanTxMessage.data[4] = (uint8_t) (SysStatus.Tasks[TASK_CAN].updateRate_ms >> 8);
+    CanTxMessage.data[5] = (uint8_t) (SysStatus.Tasks[TASK_DISP].updateRate_ms >> 0);
+    CanTxMessage.data[6] = (uint8_t) (SysStatus.Tasks[TASK_DISP].updateRate_ms >> 8);
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0xD2_CMD_TaskHandle(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = Generic_CAN_clear();
+    uint8_t Selector = 0;
+    uint16_t CycleTimer_ms = 0;
+    int index = 0;
+    
+    CanTxMessage.id = Generic_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[1] = (uint8_t) (SysStatus.Tasks[TASK_POTI].updateRate_ms >> 0);
+    CanTxMessage.data[2] = (uint8_t) (SysStatus.Tasks[TASK_POTI].updateRate_ms >> 8);
+    CanTxMessage.data[3] = 0xFF;
+    CanTxMessage.data[4] = 0xFF;
+    CanTxMessage.data[5] = 0xFF;
+    CanTxMessage.data[6] = 0xFF;
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}
 
 tst_CAN_Handler_Entry CanHandlerList[] = 
 {   
@@ -597,5 +658,9 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0xA2  , 0 , 0     , 0 , 0 , CAN_0xA2_CMD_TX_CYCLE             },
    // Projekt spezifische Befehle
     
+    // Task handling
+    { 0xD0  , 0 , 0     , 0 , 0 , CAN_0xD0_CMD_TaskHandle           },
+    { 0xD1  , 1 , 100   , 0 , 0 , CAN_0xD1_CMD_TaskHandle           },
+    { 0xD2  , 1 , 100   , 0 , 0 , CAN_0xD2_CMD_TaskHandle           },
     { 0xFF  , 0 , 0     , 0 , 0 , NULL                              },  // NICHT VER�NDERN!!!!
 };
