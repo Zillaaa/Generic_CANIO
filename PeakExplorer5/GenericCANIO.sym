@@ -15,13 +15,6 @@ enum Generic_CANIO_CMD_Result(0="CANIO_ERR_OK", 1="CANIO_ERR_UNKOWN",
 [GENERIC_CANIO]
 ID=18EF0000h
 Type=J1939PG
-Mux=CAN_0x00_CMD_PING 0,8 0 
-Var=CAN_0x00_Runtime unsigned 8,8 /u:s
-Var=CAN_0x00_CAN_RX unsigned 16,8 /u:x
-Var=CAN_0x00_CAN_TX unsigned 24,8 /u:x
-Var=CAN_0x00_CAN_OF unsigned 32,8 /u:x
-
-[GENERIC_CANIO]
 Mux=CAN_0x01_SYS_BuildDate 0,8 1 
 Var=CAN_0x01_STR_Index unsigned 8,8
 Var=CAN_0x01_STR string 16,48
@@ -75,11 +68,24 @@ Var=CAN_0xA1_NewSA unsigned 8,8 /max:1
 Var=CAN_0xA1_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
 
 [GENERIC_CANIO]
-Mux=CAN_0x2F_OUTPUT_SAVESTATE 0,8 2Fh
-Var=CAN_0x2F_IOSelector unsigned 8,8 /max:1
-Var=CAN_0x2F_SafeValue unsigned 16,16 /max:1	// Identisch mit OUTPUT_SET Value, nur wird diesmal dieser Wert beim START und bei FEHLER  angefahren.
-Var=CAN_0x2F_MagicNumber unsigned 32,16 /min:8874 /max:8874 /d:8874	// Zur Verhinderung, dass man den SafeState versehentlich ändert.
-Var=CAN_0x2F_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+Mux=CAN_0x21_OUTPUT_SAVESTATE 0,8 21h
+Var=CAN_0x21_InputSelector unsigned 8,8
+Var=CAN_0x21_SafeStateValue unsigned 16,16
+Var=CAN_0x21_MagicNumber unsigned 32,16 /min:8874 /max:8874 /d:8874
+Var=CAN_0x21_Result unsigned 56,8 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO]
+Mux=CAN_0x22_OUTPUT_SWITCHOFF 0,8 22h
+Var=CAN_0x22_InputSelector unsigned 8,8
+Var=CAN_0x22_newValue unsigned 16,8
+Var=CAN_0x22_MagicNumber unsigned 24,16 /min:57411 /max:57411 /d:57411
+Var=CAN_0x22_Result unsigned 56,8
+
+[GENERIC_CANIO]
+Mux=CAN_0xA2_CMD_TX_CYCLE 0,8 A2h
+Var=CAN_0xA2_Selector unsigned 8,8
+Var=CAN_0xA2_Cycle_ms unsigned 16,16 /u:ms
+Var=CAN_0xA2_Result unsigned 56,8 /e:Generic_CANIO_CMD_Result
 
 [GENERIC_CANIO_BROADCAST]
 ID=18FFBB00h
@@ -88,9 +94,9 @@ Mux=CAN_0x00_BC_PING 0,8 0
 Var=CAN_0x00_BC_Runtime unsigned 8,8 /u:s
 Var=CAN_0x00_BC_CAN_RX unsigned 16,8 /u:x
 Var=CAN_0x00_BC_CAN_TX unsigned 24,8 /u:x
-Var=CAN_0x00_BC_CAN_OF_TX unsigned 32,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_TX unsigned 40,8 /u:x
 Var=CAN_0x00_BC_CAN_CMD unsigned 48,8 /u:x
-Var=CAN_0x00_BC_CAN_OF_RX unsigned 40,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_RX unsigned 32,8 /u:x
 Var=CAN_0x00_BC_SYS_CURR unsigned 56,8 /u:mA
 
 [GENERIC_CANIO_BROADCAST]
@@ -133,4 +139,39 @@ Var=CAN_0xD2_CMD_Task3 unsigned 8,16 /u:ms
 Var=CAN_0xD2_CMD_Task4 unsigned 24,16 /u:ms
 Var=CAN_0xD2_CMD_Task5 unsigned 40,16 /u:ms
 Var=CAN_0xD2_CMD_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x11_INPUT_ANA 0,8 11h
+Var=CAN_0x11_INPUT_ANA0 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_ANA1 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_ANA2 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_ANA3 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_ANA4 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_ANA5 unsigned 48,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x12_INPUT_IO 0,8 12h
+Var=CAN_0x12_INPUT_IO0 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_IO1 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_IO2 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_IO3 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_IO4 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_IO5 unsigned 48,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x13_INPUT_HSD 0,8 13h
+Var=CAN_0x13_INPUT_HSD0 unsigned 8,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD1 unsigned 16,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD2 unsigned 24,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD3 unsigned 32,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD4 unsigned 40,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD5 unsigned 48,8 /u:mA /f:0.05
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x14_INPUT_MISC 0,8 14h
+Var=CAN_0x14_INPUT_HSD6 unsigned 8,8 /u:mA /f:0.05
+Var=CAN_0x14_INPUT_HSD7 unsigned 16,8 /u:mA /f:0.05
+Var=CAN_0x14_INPUT_DIN6 unsigned 24,1
+Var=CAN_0x14_INPUT_DIN7 unsigned 32,1
+Var=CAN_0x14_INPUT_TEMP signed 40,8 /u:°C
 
