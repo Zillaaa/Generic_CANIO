@@ -249,29 +249,32 @@ ten_CanErrorList    LIB_IO_SET_Output_Enable        (uint8_t index, uint16_t new
 
 uint16_t            LIB_Mittwerlwertbildung         (tst_LaufendeMittelwertBildung_Entry *pData, uint16_t newValue)
 {
-    uint16_t delta_ms = 0;
+    int i = 0;
     uint32_t Mittelwertberechnung = 0;
-    // Die 0en müssen aussortiert werden...
+    
     if(newValue)
     {
-        if(pData->index > MITTELWERT_ARITH) pData->index = 0;
+        if(pData->index >= MITTELWERT_ARITH) pData->index = 0;
         pData->X[pData->index] = newValue;
         pData->index++;   
         pData->TS_last = HAL_SYS_GET_Millis();     
     }
-    else
-    {
+    // Hatten wir überhaupt jemals werte?
+    if(pData->TS_last)
+    {    
         // ... bis wir wirklich 0 haben!
         if((HAL_SYS_GET_Millis() - pData->TS_last) > MITTELWERT_TIMEOUT_MS)
         {
-            for(delta_ms = 0; delta_ms < MITTELWERT_ARITH; delta_ms++) pData->X[delta_ms] = 0;
+            pData->TS_last = 0;
+            for(i = 0; i < MITTELWERT_ARITH; i++) pData->X[i] = 0;
         }
-    }
-
-    Mittelwertberechnung = 0;
-    for(delta_ms = 0; delta_ms < MITTELWERT_ARITH; delta_ms++) Mittelwertberechnung += pData->X[delta_ms];
-    Mittelwertberechnung /= MITTELWERT_ARITH;
-
+        else
+        {        
+            Mittelwertberechnung = 0;
+            for(i = 0; i < MITTELWERT_ARITH; i++) Mittelwertberechnung += pData->X[i];
+            Mittelwertberechnung /= MITTELWERT_ARITH;
+        }
+    }    
     return (uint16_t) Mittelwertberechnung;
 }
 

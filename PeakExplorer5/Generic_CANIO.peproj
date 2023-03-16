@@ -12,12 +12,13 @@
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="05" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="06" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="100A" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="200AF40118DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="2018204E18DC" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A0" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A1" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="21000000AA22" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="22080043E0" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A213F401" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="200AF40118DC" Creator="Benutzer" DA="204" Destination="204"/>
     </TransmitList>
     <Files>
         <File RelativePath="GenericCANIO.sym"/>

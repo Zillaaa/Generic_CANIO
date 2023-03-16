@@ -23,7 +23,7 @@ ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, uint32_t *pReadV
         case IO_INPUT_CURR: readValue = HAL_current_calc(os_algin(IOList[index].HAL_ID)); break;
         case IO_OUTPUT_PROM:
         {
-            uint16_t duty = 0;
+            uint32_t duty = 0;
             switch(IOList[index].HAL_ID)
             {
                 default: result = CANIO_ERR_UNSUPPORTED; break;
@@ -462,7 +462,20 @@ tst_CANIO_Msg CAN_0xA3_CMD_ERR_IGN(tst_CANIO_Msg CanRxMessage)
 
     return  CanTxMessage;
 }
+tst_CANIO_Msg CAN_0xD0_CMD_TaskHandle(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    uint8_t Selector = 0;
+    uint16_t CycleTimer_ms = 0;
+    int index = 0;
+    
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[7] = CANIO_ERR_NOTIMPLEMENTED;
 
+    return  CanTxMessage;
+}
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" oben, können eigene CAN Nachrichten eingefügt werden.
 tst_CANIO_Msg CAN_0x11_INPUT_ANA0(tst_CANIO_Msg CanRxMessage)
@@ -503,9 +516,10 @@ tst_CANIO_Msg CAN_0x12_INPUT_ANA_IO0(tst_CANIO_Msg CanRxMessage)
     
     return  CanTxMessage;
 }
+tst_LaufendeMittelwertBildung_Entry Mittelwert[5] = {0};
 tst_CANIO_Msg CAN_0x13_INPUT_STAT_ANA_HSD0(tst_CANIO_Msg CanRxMessage)
 {
-    static tst_LaufendeMittelwertBildung_Entry Mittelwert[5] = {0};
+    
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
     
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
@@ -513,12 +527,13 @@ tst_CANIO_Msg CAN_0x13_INPUT_STAT_ANA_HSD0(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
 
-    CanTxMessage.data[1] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[0] ,os_algin(STAT_ANA_HSD0))) / 20);
-    CanTxMessage.data[2] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[1] ,os_algin(STAT_ANA_HSD1))) / 20);
-    CanTxMessage.data[3] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[2] ,os_algin(STAT_ANA_HSD2))) / 20);
-    CanTxMessage.data[4] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[3] ,os_algin(STAT_ANA_HSD3))) / 20);
-    CanTxMessage.data[5] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[4] ,os_algin(STAT_ANA_HSD4))) / 20);
-    CanTxMessage.data[6] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[5] ,os_algin(STAT_ANA_HSD5))) / 20);
+    
+    CanTxMessage.data[1] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[0] ,os_algin(STAT_ANA_HSD0))) / 10);
+    CanTxMessage.data[2] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[1] ,os_algin(STAT_ANA_HSD1))) / 10);
+    CanTxMessage.data[3] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[2] ,os_algin(STAT_ANA_HSD2))) / 10);
+    CanTxMessage.data[4] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[3] ,os_algin(STAT_ANA_HSD3))) / 10);
+    CanTxMessage.data[5] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[4] ,os_algin(STAT_ANA_HSD4))) / 10);
+    CanTxMessage.data[6] = (uint8_t)(HAL_current_calc(LIB_Mittwerlwertbildung(&Mittelwert[5] ,os_algin(STAT_ANA_HSD5))) / 10);
     CanTxMessage.data[7] = CANIO_ERR_OK;
     
 
@@ -533,8 +548,8 @@ tst_CANIO_Msg CAN_0x14_INPUT_MISC(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
 
-    CanTxMessage.data[1] = (uint8_t)(HAL_current_calc(os_algin(STAT_ANA_HSD6)) / 20);
-    CanTxMessage.data[2] = (uint8_t)(HAL_current_calc(os_algin(STAT_ANA_HSD7)) / 20);
+    CanTxMessage.data[1] = (uint8_t)(HAL_current_calc(os_algin(STAT_ANA_HSD6)) / 10);
+    CanTxMessage.data[2] = (uint8_t)(HAL_current_calc(os_algin(STAT_ANA_HSD7)) / 10);
     CanTxMessage.data[3] = (uint8_t) os_digin(D_IN6);
     CanTxMessage.data[4] = (uint8_t) os_digin(D_IN7);
     CanTxMessage.data[5] = (uint8_t)(os_temperature_read());
@@ -592,7 +607,25 @@ tst_CANIO_Msg CAN_0xB0_CMD_PWM_CNF(tst_CANIO_Msg CanRxMessage)
 
     return  CanTxMessage;
 }
+tst_CANIO_Msg CAN_0xD1_CMD_TaskHandle(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    uint8_t Selector = 0;
+    uint16_t CycleTimer_ms = 0;
+    int index = 0;
+    
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
 
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    CanTxMessage.data[1] = (uint8_t) (uint8_t) (MainLoop_ms >> 0);
+    CanTxMessage.data[2] = (uint8_t) (uint8_t) (MainLoop_ms >> 8);
+    CanTxMessage.data[3] = (uint8_t) (uint8_t) (MainLoop_len_ms >> 0);
+    CanTxMessage.data[4] = (uint8_t) (uint8_t) (MainLoop_len_ms >> 8);
+    CanTxMessage.data[7] = CANIO_ERR_OK;
+
+    return  CanTxMessage;
+}    
 
 tst_CAN_Handler_Entry CanHandlerList[] = 
 {   
@@ -612,10 +645,10 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0x06  , 0 , 0     , 0 , 0 , CAN_0x06_SYS_ProjectName          },
     // Input              
     { 0x10  , 0 , 200   , 0 , 0 , CAN_0x10_INPUT_GET                },
-    { 0x11  , 1 , 200   , 0 , 0 , CAN_0x11_INPUT_ANA0               },
-    { 0x12  , 1 , 300   , 0 , 0 , CAN_0x12_INPUT_ANA_IO0            },
-    { 0x13  , 0 , 400   , 0 , 0 , CAN_0x13_INPUT_STAT_ANA_HSD0      },
-    { 0x14  , 0 , 400   , 0 , 0 , CAN_0x14_INPUT_MISC               },
+    { 0x11  , 1 , 500   , 0 , 0 , CAN_0x11_INPUT_ANA0               },
+    { 0x12  , 1 , 500   , 0 , 0 , CAN_0x12_INPUT_ANA_IO0            },
+    { 0x13  , 1 , 500   , 0 , 0 , CAN_0x13_INPUT_STAT_ANA_HSD0      },
+    { 0x14  , 1 , 500   , 0 , 0 , CAN_0x14_INPUT_MISC               },
     // Output                 
     { 0x20  , 0 , 0     , 0 , 0 , CAN_0x20_OUTPUT_SET               },
     { 0x21  , 0 , 0     , 0 , 0 , CAN_0x21_OUTPUT_SAVESTATE         },
@@ -628,6 +661,9 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0xA3  , 0 , 0     , 0 , 0 , CAN_0xA3_CMD_ERR_IGN              },
     // Projekt spezifische Befehle
     { 0xB0  , 0 , 0     , 0 , 0 , CAN_0xB0_CMD_PWM_CNF              },
+    // Task Management
+    { 0xD0  , 0 , 0     , 0 , 0 , CAN_0xD0_CMD_TaskHandle           },
+    { 0xD1  , 1 , 100   , 0 , 0 , CAN_0xD1_CMD_TaskHandle           },
     { 0xFF  , 0 , 0     , 0 , 0 , NULL                              },  // NICHT VERÄNDERN!!!!
 };
 //################# WENN die Source-Datei nicht autoamtisch compiliert werden kann #################

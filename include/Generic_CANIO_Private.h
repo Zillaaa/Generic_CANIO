@@ -97,7 +97,7 @@ ten_CanErrorList    LIB_IO_SET_Output_Enable        (uint8_t index, uint16_t new
 #define MITTELWERT_DELTA_MS_MAX (1000/100)  // PWM MIN = 100Hz
 #define MITTELWERT_DELTA_MS_MIN (1000/1000)  // PWM MIN = 1000Hz
 #define MITTELWERT_TIMEOUT_MS 1000
-#define MITTELWERT_ARITH 10
+#define MITTELWERT_ARITH 7
 typedef struct Mittelwertbildung
 {
     uint8_t index;

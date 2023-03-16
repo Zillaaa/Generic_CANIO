@@ -160,17 +160,17 @@ Var=CAN_0x12_INPUT_IO5 unsigned 48,8 /u:V /f:0.1
 
 [GENERIC_CANIO_BROADCAST]
 Mux=CAN_0x13_INPUT_HSD 0,8 13h
-Var=CAN_0x13_INPUT_HSD0 unsigned 8,8 /u:mA /f:0.05
-Var=CAN_0x13_INPUT_HSD1 unsigned 16,8 /u:mA /f:0.05
-Var=CAN_0x13_INPUT_HSD2 unsigned 24,8 /u:mA /f:0.05
-Var=CAN_0x13_INPUT_HSD3 unsigned 32,8 /u:mA /f:0.05
-Var=CAN_0x13_INPUT_HSD4 unsigned 40,8 /u:mA /f:0.05
-Var=CAN_0x13_INPUT_HSD5 unsigned 48,8 /u:mA /f:0.05
+Var=CAN_0x13_INPUT_HSD0 unsigned 8,8 /u:mA /f:10
+Var=CAN_0x13_INPUT_HSD1 unsigned 16,8 /u:mA /f:10
+Var=CAN_0x13_INPUT_HSD2 unsigned 24,8 /u:mA /f:10
+Var=CAN_0x13_INPUT_HSD3 unsigned 32,8 /u:mA /f:10
+Var=CAN_0x13_INPUT_HSD4 unsigned 40,8 /u:mA /f:10
+Var=CAN_0x13_INPUT_HSD5 unsigned 48,8 /u:mA /f:10
 
 [GENERIC_CANIO_BROADCAST]
 Mux=CAN_0x14_INPUT_MISC 0,8 14h
-Var=CAN_0x14_INPUT_HSD6 unsigned 8,8 /u:mA /f:0.05
-Var=CAN_0x14_INPUT_HSD7 unsigned 16,8 /u:mA /f:0.05
+Var=CAN_0x14_INPUT_HSD6 unsigned 8,8 /u:mA /f:10
+Var=CAN_0x14_INPUT_HSD7 unsigned 16,8 /u:mA /f:10
 Var=CAN_0x14_INPUT_DIN6 unsigned 24,1
 Var=CAN_0x14_INPUT_DIN7 unsigned 32,1
 Var=CAN_0x14_INPUT_TEMP signed 40,8 /u:°C
