@@ -7,7 +7,10 @@
 
 
 
-
+//############################################################# PUBLIC PIMARY CALL Funktionen #################################################################
+void                Generic_CAN_Init                (uint8_t Source_ID);
+tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage);
+void                Generic_CAN_CycliqMessage       (void);
 
 
 
@@ -35,7 +38,7 @@ tst_CANIO_Msg CAN_0xD0_CMD_TaskHandle       (tst_CANIO_Msg CanRxMessage);
 
 //############################################################# PUBLIC LIB Funktionen #################################################################
 int                 LIB_IO_GET_ListSize         (void);
-
+int                 LIB_CAN_isValid             (tst_CANIO_Msg CanRXMessage);
 
 
 

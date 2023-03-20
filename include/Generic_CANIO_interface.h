@@ -85,10 +85,7 @@ typedef struct CAN_Handler_ListEntry
 
 extern tst_CAN_Handler_Entry CanHandlerList[];
 
-//############################################################# PUBLIC PIMARY CALL Funktionen #################################################################
-void                Generic_CAN_Init                (uint8_t Source_ID);
-tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage);
-void                Generic_CAN_CycliqMessage       (void);
+
 
 //############################################################# PUBLIC HAL Funktionen #################################################################
 ten_CanErrorList    HAL_IO_GET_Input_mV         (uint8_t IOIndex, uint32_t *pValue);

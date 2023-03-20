@@ -24,7 +24,6 @@ uint32_t            LIB_CAN_GetRxCANid              (uint8_t SenderID);
 size_t              LIB_CAN_GetSizeOfList           (void);
 int                 LIB_CAN_SearchHandler           (uint8_t MUX0);
 tst_CANIO_Msg       LIB_CAN_clear                   (void);
-int                 LIB_CAN_isValid                 (tst_CANIO_Msg CanRXMessage);
 uint32_t            LIB_CAN_Switch_RXTX             (uint32_t CanId);
 tst_CANIO_Msg       LIB_0xFF_CMD_FEHLER_DEFAULT     (tst_CANIO_Msg CanRxMessage);
 
