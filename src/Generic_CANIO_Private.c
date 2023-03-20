@@ -1,25 +1,39 @@
 
 #include "Generic_CANIO\include\Generic_CANIO_Private.h"
+#include "Generic_CANIO\include\Generic_CANIO_Public.h"
 
 uint8_t     Generic_CAN_SourceID = CAN_ID_DEFAULT_SA;
 uint32_t    Generic_CAN_BusSpeed = CAN_ID_DEFAULT_SPEEED;
-
+uint8_t     Generic_CAN_rxCounter; 
+uint8_t     Generic_CAN_txCounter; 
+uint8_t     Generic_CAN_rxOverFlow;
+uint8_t     Generic_CAN_txOverFlow;
+uint8_t     Generic_CAN_cmdCounter;
 //############################################################# IB Funktionen #################################################################
 
 void                Generic_CAN_Init                (uint8_t Source_ID)
 {
-    Generic_CAN_SourceID = Source_ID;
+    Generic_CAN_SourceID    = Source_ID;
+    Generic_CAN_SourceID    = CAN_ID_DEFAULT_SA;
+    Generic_CAN_BusSpeed    = CAN_ID_DEFAULT_SPEEED;
+    Generic_CAN_rxCounter   = 0; 
+    Generic_CAN_txCounter   = 0; 
+    Generic_CAN_rxOverFlow  = 0;
+    Generic_CAN_txOverFlow  = 0;
+    Generic_CAN_cmdCounter  = 0;
 }
 tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage)
 {    
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
     int index = LIB_CAN_SearchHandler(CanRxMessage.data[0]);
-
+    Generic_CAN_rxCounter++;
     if(index >= 0)
     {
+        Generic_CAN_cmdCounter++;
         CanTxMessage =  CanHandlerList[index].Handler(CanRxMessage);
                         CanHandlerList[index].ExecCounter++;
-                        CanHandlerList[index].CycleTimer_TS = HAL_SYS_GET_Millis();                
+                        CanHandlerList[index].CycleTimer_TS = HAL_SYS_GET_Millis();    
+        if(LIB_CAN_isValid(CanTxMessage))  Generic_CAN_txCounter++; 
     }
     else
     {
@@ -54,7 +68,8 @@ void                Generic_CAN_CycliqMessage       (void)
                     {
                         CanHandlerList[index].CycleTimer_TS += CanHandlerList[index].CycleTimer_ms;
                     }
-                    HAL_CAN_SendMsg(&CanTxMessage);
+                    Generic_CAN_txCounter++;
+                    if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
                 }
             }
         }
@@ -176,68 +191,59 @@ tst_CANIO_Msg       LIB_0xFF_CMD_FEHLER_DEFAULT     (tst_CANIO_Msg CanRxMessage)
 
 //############################################################# UserLibs: IO-List #################################################################
 
-int                 LIB_IO_GET_ListSize             (void)
-{
-    int index = 0;
-    static size_t LIB_IO_GET_ListSize = 0;
-    if(LIB_IO_GET_ListSize) return LIB_IO_GET_ListSize;
-    
-    while(IOList[index].IO_Type != IO_UNKOWN)index++;
-    LIB_IO_GET_ListSize = index;
-    return LIB_IO_GET_ListSize;
-}
-int                 LIB_IO_GET_ListIndex            (uint8_t IO_Type, uint8_t HAL_ID )
+
+ten_CanErrorList    LIB_IO_GET_ListIndex            (ten_IO_Type IO_Type, uint8_t HAL_ID, uint8_t *pIndex )
 {
     int index = 0;
     
     for(index = 0; index < LIB_IO_GET_ListSize(); index++)
     {
-        if( (IOList[index].IO_Type == IO_Type) &&
-            (IOList[index].HAL_ID == HAL_ID)) return index;
+        if( (GenericIOList[index].IO_Type == IO_Type) &&
+            (GenericIOList[index].HAL_ID == HAL_ID)) 
+            {
+                *pIndex = index;
+                return CANIO_ERR_OK;
+            }
     }
-    return  -1;
+    return  CANIO_ERR_INDEX_NOTFOUND;
 }
-ten_CanErrorList    LIB_IO_SET_Output_Safe          (uint8_t index, uint32_t newValue)
+ten_CanErrorList    LIB_IO_SET_Output_Safe          (uint8_t index, ten_IO_Type IO_Type, uint32_t newValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
-    if(index >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
-    if(IOList[index].actualValue_MIN > newValue) newValue = IOList[index].actualValue_MIN;
-    if(IOList[index].actualValue_MAX < newValue) newValue = IOList[index].actualValue_MAX;
+    if(index >= LIB_IO_GET_ListSize())                  return CANIO_ERR_INDEX_OUTOFRANGE;
+    if(GenericIOList[index].isEnabled == 0)             return CANIO_ERR_OUTPUT_DISABLED;
+    if(GenericIOList[index].isOutput == 0)              return CANIO_ERR_INDEX_NOT_OUTPUT; 
+    if((GenericIOList[index].IO_Type != IO_Type) == 0)  return CANIO_ERR_IOTYPE_DIFFERENT;
 
-    switch(IOList[index].IO_Type)
-    {
-        case IO_OUTPUT_SW:      
-        case IO_OUTPUT_PROM:    
-        case IO_OUTPUT_CURR: break;
-        default: result = CANIO_ERR_UNSUPPORTED; break;
-    }
+
+    // MIN MAX Prüfung
+     if(GenericIOList[index].actualValue_MIN  > newValue) newValue = GenericIOList[index].actualValue_MIN;
+     if(GenericIOList[index].actualValue_MAX < newValue) newValue = GenericIOList[index].actualValue_MAX;
+
+    
+    
     
     if(result == CANIO_ERR_OK)
     {
-        IOList[index].SafeValue = newValue;
-         
+        GenericIOList[index].SafeValue = newValue;         
     }
     
     return result;
 }
-ten_CanErrorList    LIB_IO_SET_Output_Enable        (uint8_t index, uint16_t newValue)
+ten_CanErrorList    LIB_IO_SET_Output_Enable        (uint8_t index, ten_IO_Type IO_Type, uint32_t newValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
-    if(index >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
-    switch(IOList[index].IO_Type)
-    {
-        case IO_OUTPUT_SW:      
-        case IO_OUTPUT_PROM:    
-        case IO_OUTPUT_CURR: break;
-        default: result = CANIO_ERR_UNSUPPORTED; break;
-    }
-    
+    if(index >= LIB_IO_GET_ListSize())          return CANIO_ERR_INDEX_OUTOFRANGE;
+    if(GenericIOList[index].isEnabled == 0)     return CANIO_ERR_OUTPUT_DISABLED;
+    if(GenericIOList[index].isOutput == 0)      return CANIO_ERR_INDEX_NOT_OUTPUT; 
+    if(GenericIOList[index].IO_Type != IO_Type) return CANIO_ERR_IOTYPE_DIFFERENT;
+
     if(result == CANIO_ERR_OK)
     {
-        IOList[index].Enabled = newValue ? 1 : 0;
-        if(IOList[index].Enabled == 0)
+        GenericIOList[index].isEnabled = newValue ? 1 : 0;
+        if(GenericIOList[index].isEnabled == 0)
         {
-            result = HAL_IO_SET_Output(index, IOList[index].SafeValue);
+            result = HAL_IO_SET_Output(index, IO_Type, GenericIOList[index].SafeValue);
         }
                 
     }
