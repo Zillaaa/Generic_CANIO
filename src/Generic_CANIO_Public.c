@@ -53,8 +53,6 @@ ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, ten_IO_Type IO_T
     switch(GenericIOList[index].IO_Type)
     {
         default: result = CANIO_ERR_UNSUPPORTED; break;
-        case IO_INPUT_MV:       result = HAL_IO_SET_Input_mV     (GenericIOList[index].HAL_ID, newValue); break;
-        case IO_INPUT_CURR:     result = HAL_IO_SET_Input_mA     (GenericIOList[index].HAL_ID, newValue); break;
         case IO_OUTPUT_PROM:    result = HAL_IO_SET_Output_ppm   (GenericIOList[index].HAL_ID, newValue); break;
         case IO_OUTPUT_SW:      result = HAL_IO_SET_Output_bool  (GenericIOList[index].HAL_ID, newValue); break;
         case IO_OUTPUT_CURR:    result = HAL_IO_SET_Output_mA    (GenericIOList[index].HAL_ID, newValue); break;
@@ -140,7 +138,7 @@ tst_CANIO_Msg CAN_0x03_SYS_SerNum(tst_CANIO_Msg CanRxMessage)
 tst_CANIO_Msg CAN_0x04_SYS_SWversion(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
-    char Buffer[10];
+    uint8_t Buffer[10];
     HAL_SYS_Get_ProjektVersion(Buffer, sizeof(Buffer));
 
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
@@ -148,7 +146,7 @@ tst_CANIO_Msg CAN_0x04_SYS_SWversion(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAB_PrintString(&CanTxMessage, (const char*)Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
@@ -156,7 +154,7 @@ tst_CANIO_Msg CAN_0x05_SYS_BSPversion(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
     char Buffer[10];
-    HAL_SYS_Get_pBSPversion(Buffer, sizeof(Buffer));
+    HAL_SYS_Get_pBSPversion((uint8_t*)Buffer, sizeof(Buffer));
 
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
     CanTxMessage.len = 8;

@@ -1,6 +1,7 @@
 #ifndef GENERIC_CANIO_INTERFACE_H
 #define GENERIC_CANIO_INTERFACE_H
 
+
 #include "null.h"
 #include "bsp.h"
 #include "size_t.h"
@@ -15,7 +16,6 @@ typedef TS8 int8_t;
 typedef TS16 int16_t;
 typedef TS32 int32_t;
 
-typedef TstWJ1939_eTPLMsgData bios_can_msg_typ;
 typedef enum IO_List_Types
 {
     IO_UNKOWN,
@@ -42,7 +42,9 @@ typedef enum CANIO_ERROR_LIST
     CANIO_ERR_INDEX_NOT_OUTPUT,
     CANIO_ERR_IOTYPE_DIFFERENT,
     CANIO_ERR_VALUE_OUTOFRANGE_MAX,
-    CANIO_ERR_VALUE_OUTOFRANGE_MIN
+    CANIO_ERR_VALUE_OUTOFRANGE_MIN,
+    CANIO_ERR_READ_FAIL,
+    CANIO_ERR_TX_FAIL
 }ten_CanErrorList;
 
 typedef struct CANIO_Message
@@ -101,20 +103,20 @@ ten_CanErrorList    HAL_IO_SET_Output_bool      (uint8_t IOIndex, uint32_t pValu
 ten_CanErrorList    HAL_IO_SET_Output_mA        (uint8_t IOIndex, uint32_t pValue);
 ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_Type, uint32_t *pReadValue);
 ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, ten_IO_Type IO_Type, uint32_t newValue);
-uint8_t             HAL_CAN_SendMsg             (tst_CANIO_Msg *Data); // main.cpp
-bios_can_msg_typ    HAL_ConvertTo               (tst_CANIO_Msg Msg);
-tst_CANIO_Msg       HAL_ConvertFrom             (bios_can_msg_typ Msg);
-void                HAL_update_SourceID         (uint8_t newSourceID);
+ten_CanErrorList    HAL_CAN_SendMsg             (tst_CANIO_Msg *Data); // main.cpp
+ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, TstWJ1939_eTPLMsgData* pDest);
+ten_CanErrorList    HAL_ConvertFrom             (TstWJ1939_eTPLMsgData Msg, tst_CANIO_Msg* pDest);
+ten_CanErrorList    HAL_update_SourceID         (uint8_t newSourceID);
 uint32_t            HAL_SYS_GET_Millis          (void);
 void                HAL_SYS_Get_SerialNumber    (char*, size_t);
-void                HAL_SYS_Get_ProjektVersion  (char*, size_t);
+void                HAL_SYS_Get_ProjektVersion  (uint8_t*, size_t);
 void                HAL_SYS_Get_pProjectName    (char*, size_t);
-void                HAL_SYS_Get_pBSPversion     (char*, size_t);
-int                 HAL_WRITE_EEP               (void);
+void                HAL_SYS_Get_pBSPversion     (uint8_t*, size_t);
+ten_CanErrorList    HAL_WRITE_EEP               (void);
 
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" oben, können eigene CAN Nachrichten eingefügt werden.
 
-
+extern TstWVersion_eSWIdent CstApp_eSWIdent;
 
 #endif
