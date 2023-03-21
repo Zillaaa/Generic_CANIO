@@ -124,12 +124,12 @@ tst_CANIO_Msg       LIB_CAN_clear                   (void)
 }
 uint32_t            LIB_CAN_Switch_RXTX             (uint32_t CanId)
 {
-    uint32_t newCanID = 0 + ((uint32_t)CAN_ID_PGN_RX_CMD << 8);
-    if((CanId & 0x00FF0000) == newCanID) 
+    uint32_t newCanID = 0;
+    if((CanId & 0x00FF0000L) == 0x00EF0000L) 
     {   // Nach J1939 sind nur 0xXXEFXXXX gerichtete Kommunikation, die gedreht werden muss.
-        newCanID  =   CanId  & 0xFFFF0000;
-        newCanID +=  ((CanId & 0x000000FF) << 8);
-        newCanID +=  ((CanId & 0x0000FF00) >> 8);
+        newCanID  =   CanId  & 0xFFFF0000L;
+        newCanID +=  ((CanId & 0x000000FFL) << 8);
+        newCanID +=  ((CanId & 0x0000FF00L) >> 8);
     }
     else
     {

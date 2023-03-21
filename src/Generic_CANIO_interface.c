@@ -296,22 +296,24 @@ ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, TstWJ1939_eT
     int i=0;	
     for(i=0; i<8; i++) pDest->pu8Data[i]  = Msg.data[i];
     pDest->u16Length    = Msg.len;
-    pDest->u8Addr       = (uint16_t) (( Msg.id & 0x000000FF)  >>  0);
+    
 
     // Welchen J1939 Nachrichten Typ haben
-    if(( Msg.id & 0x00FF0000) == 0x00EF0000 )
+    if(( Msg.id & 0x00FF0000L) == 0x00EF0000L )
     {   // ==> Wir haben eine gerichtete proprietary Nachricht!
-        pDest->u8Dst        = (uint8_t)  (( Msg.id & 0x0000FF00)  >>  8); 
-        pDest->u16PGN       = (uint8_t)  (( Msg.id & 0x00FF0000)  >>  8);            
+		pDest->u8Addr       = (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
+        pDest->u8Dst        = (uint8_t)  (( Msg.id & 0x0000FF00L)  >>  8); 
+        pDest->u16PGN       = (uint16_t)  (( Msg.id & 0x00FF0000L)  >>  8);            
     }
     else
     {
-        pDest->u8Dst        = 0;
-        pDest->u16PGN       = (uint8_t)  (( Msg.id & 0x00FFFF00)  >>  8);        
+		pDest->u8Addr       = (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
+		pDest->u8Dst        = 0;
+        pDest->u16PGN       = (uint16_t)  (( Msg.id & 0x00FFFF00L)  >>  8);        
     }
 
-    pDest->u8DataPage   = (uint8_t)  (( Msg.id & 0x01000000)  >> 24);    
-    pDest->u8PrioType   = (uint8_t)  (( Msg.id & 0x1C000000)  >> 26);    
+    pDest->u8DataPage   = (uint8_t)  (( Msg.id & 0x01000000L)  >> 24);    
+    pDest->u8PrioType   = (uint8_t)  (( Msg.id & 0x1C000000L)  >> 26);    
     pDest->u8Remote     = 0; // Verboten im J1939 Bereich
 	return CANIO_ERR_OK;
 }
