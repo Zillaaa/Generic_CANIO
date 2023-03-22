@@ -1,6 +1,6 @@
 #ifndef GENERIC_CANIO_PRIVATE_H
 #define GENERIC_CANIO_PRIVATE_H
-#include "Generic_CANIO_interface.h"
+#include "Generic_CANIO_interface_SPU7066.h"
 
 
 #define CAN_ID_PGN_RX_CMD	        0xEF00L
@@ -15,7 +15,18 @@ extern uint8_t     Generic_CAN_rxOverFlow;
 extern uint8_t     Generic_CAN_txOverFlow;
 extern uint8_t     Generic_CAN_cmdCounter;
 
-
+typedef enum 
+{
+    PIT_SIGNEDBYTE	    ,
+    PIT_UNSIGNEDBYTE    ,
+    PIT_HEXBYTE		    ,
+    PIT_SIGNEDWORD	    ,
+    PIT_UNSIGNEDWORD    ,
+    PIT_HEXWORD		    ,
+    PIT_SIGNEDLONG	    ,
+    PIT_UNSIGNEDLONG    ,
+    PIT_HEXLONG		    
+}ten_ASC_PrintType;
 
 
 //############################################################# PRIVATE LIB: CAN-List #################################################################
@@ -49,8 +60,8 @@ typedef struct Mittelwertbildung
 uint16_t            LIB_Mittwerlwertbildung         (tst_LaufendeMittelwertBildung_Entry *pData, uint16_t newValue);
 
 //############################################################# PRIVATE LIB: MISC #################################################################
-int                 LIB_CAB_PrintString                 (tst_CANIO_Msg* CanTxMessage, const char* pString);
-
+int                 LIB_CAN_PrintString             (tst_CANIO_Msg* CanTxMessage, const char* pString);
+size_t              ASC_vPrintInteger               (char *pBuffer, void *i, ten_ASC_PrintType format);
 
 
 #endif

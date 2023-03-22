@@ -1,7 +1,7 @@
 #ifndef GENERIC_CANIO_PUBLIC_H
 #define GENERIC_CANIO_PUBLIC_H
 
-#include "Generic_CANIO_interface.h"
+#include "Generic_CANIO_interface_SPU7066.h"
 
 
 

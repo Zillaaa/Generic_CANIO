@@ -8,8 +8,6 @@
 #define SYSTEM_CANIO_TX_CYCLE_MIN 100
 #define SYSTEM_CANIO_TX_CYCLE_MAX 60000
 
-
-
 //############################################################# IO Handling #################################################################
 ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_Type, uint32_t *pReadValue)
 {
@@ -102,7 +100,7 @@ tst_CANIO_Msg CAN_0x01_SYS_BuildDate(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, __DATE__)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, __DATE__)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
@@ -114,7 +112,7 @@ tst_CANIO_Msg CAN_0x02_SYS_BuildTime(tst_CANIO_Msg CanRxMessage)
     CanTxMessage.len = 8;    
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, __TIME__)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, __TIME__)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
@@ -131,14 +129,14 @@ tst_CANIO_Msg CAN_0x03_SYS_SerNum(tst_CANIO_Msg CanRxMessage)
 
     
 
-    while(LIB_CAB_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
 tst_CANIO_Msg CAN_0x04_SYS_SWversion(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
-    uint8_t Buffer[10];
+    char Buffer[30];
     HAL_SYS_Get_ProjektVersion(Buffer, sizeof(Buffer));
 
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
@@ -146,22 +144,22 @@ tst_CANIO_Msg CAN_0x04_SYS_SWversion(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, (const char*)Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, (const char*)Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
 tst_CANIO_Msg CAN_0x05_SYS_BSPversion(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
-    char Buffer[10];
-    HAL_SYS_Get_pBSPversion((uint8_t*)Buffer, sizeof(Buffer));
+    char Buffer[30];
+    HAL_SYS_Get_pBSPversion(Buffer, sizeof(Buffer));
 
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
     CanTxMessage.len = 8;
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     
     return  CanTxMessage;
@@ -169,7 +167,7 @@ tst_CANIO_Msg CAN_0x05_SYS_BSPversion(tst_CANIO_Msg CanRxMessage)
 tst_CANIO_Msg CAN_0x06_SYS_ProjectName(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
-    char Buffer[10];
+    char Buffer[30];
     HAL_SYS_Get_pProjectName(Buffer, sizeof(Buffer));
 
     CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
@@ -177,7 +175,7 @@ tst_CANIO_Msg CAN_0x06_SYS_ProjectName(tst_CANIO_Msg CanRxMessage)
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
     CanTxMessage.data[7] = CANIO_ERR_OK;
-    while(LIB_CAB_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
+    while(LIB_CAN_PrintString(&CanTxMessage, Buffer)) if(HAL_CAN_SendMsg(&CanTxMessage)) Generic_CAN_txOverFlow++;
 
     return  CanTxMessage;
 }
@@ -199,12 +197,11 @@ tst_CANIO_Msg CAN_0x10_INPUT_GET(tst_CANIO_Msg CanRxMessage)
     IO_Selector = CanTxMessage.data[1];
     IO_Type = (ten_IO_Type) CanTxMessage.data[2];
 
-    if(IO_Selector < LIB_IO_GET_ListSize()) result = (uint8_t)HAL_IO_GET_Input(IO_Selector, IO_Type, &InputValue);
-    else                                    result = CANIO_ERR_INDEX_NOTFOUND;
-    CanTxMessage.data[2] = (uint8_t) (InputValue >> 0);
-    CanTxMessage.data[3] = (uint8_t) (InputValue >> 8);
-    CanTxMessage.data[4] = (uint8_t) (InputValue >> 16);
-    CanTxMessage.data[5] = (uint8_t) (InputValue >> 24);
+    result = (uint8_t)HAL_IO_GET_Input(IO_Selector, IO_Type, &InputValue);    
+    CanTxMessage.data[3] = (uint8_t) (InputValue >> 0);
+    CanTxMessage.data[4] = (uint8_t) (InputValue >> 8);
+    CanTxMessage.data[5] = (uint8_t) (InputValue >> 16);
+    CanTxMessage.data[6] = (uint8_t) (InputValue >> 24);
     CanTxMessage.data[7] = (uint8_t) result;
 
     return  CanTxMessage;
@@ -232,13 +229,12 @@ tst_CANIO_Msg CAN_0x20_OUTPUT_SET(tst_CANIO_Msg CanRxMessage)
     IO_Selector = CanTxMessage.data[1];
     IO_Type = (ten_IO_Type) CanTxMessage.data[2];
 
-    NewValue = (uint16_t)(((uint32_t) CanRxMessage.data[2] << 0) + ((uint32_t) CanRxMessage.data[3] << 8));
-    MagicNumber = (uint16_t)(((uint32_t) CanRxMessage.data[4] << 0) + ((uint32_t) CanRxMessage.data[5] << 8));
+    NewValue = (uint16_t)(((uint32_t) CanRxMessage.data[3] << 0) + ((uint32_t) CanRxMessage.data[4] << 8));
+    MagicNumber = (uint16_t)(((uint32_t) CanRxMessage.data[5] << 0) + ((uint32_t) CanRxMessage.data[6] << 8));
 
     if(MagicNumber == CAN_ID_MUX_0X20_MAGIC)
     {
-        if(IO_Selector < LIB_IO_GET_ListSize()) result= (uint8_t) HAL_IO_SET_Output(IO_Selector, IO_Type, NewValue);
-        else                                    result = CANIO_ERR_INDEX_NOTFOUND;
+        result= (uint8_t) HAL_IO_SET_Output(IO_Selector, IO_Type, NewValue);        
     } 
     else result = CANIO_ERR_MAGICNUMBER_FAIL;
     CanTxMessage.data[7] = (uint8_t) result;
@@ -467,6 +463,7 @@ int                 LIB_IO_GET_ListSize         (void)
 
     do
     {
+        index++;
         value = 0;
         
         value += GenericIOList[index].IO_Type;
@@ -478,7 +475,7 @@ int                 LIB_IO_GET_ListSize         (void)
         value += GenericIOList[index].actualValue_MIN;
         value += GenericIOList[index].actualValue_MAX;
         value += GenericIOList[index].actualValue_TS;            
-    } while ((value != 0) && (value != 0xFFFF));
+    } while ((value != 0) && (index != 0xFFFF));
 
     if(value == 0xFFFF) savedIndex =  -1;
     else savedIndex =  index;

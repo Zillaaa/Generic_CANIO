@@ -1,12 +1,14 @@
 
-#include "Generic_CANIO_interface.h"
+#include "Generic_CANIO_interface_SPU7066.h"
 #include "Generic_CANIO_Public.h"
+#include "Generic_CANIO_Private.h"
 #include "version.h"
 #include "IO_Handling.h"
 #include "util.h"
 
 #define MINIMUM(a,b) ((a > b)? b : a)
 #define MAXIMUM(a,b) ((a > b)? a : b)
+
 
 tst_IO_List_Entry GenericIOList[] =
 {
@@ -263,13 +265,17 @@ void                HAL_SYS_Get_SerialNumber    (char* pBuffer, size_t sizeOfBuf
         pBuffer[i] = DstWInfo_eFactoryData.tu8ECUHWSerialNumber_Str[i];
     }
 }
-void                HAL_SYS_Get_ProjektVersion  (uint8_t* pBuffer, size_t sizeOfBuffer)
+void                HAL_SYS_Get_ProjektVersion  (char* pBuffer, size_t sizeOfBuffer)
 {
     size_t pos = 0;
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", CstApp_eSWIdent.u8V0);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", CstApp_eSWIdent.u8V1);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", CstApp_eSWIdent.u8V2);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x" , CstApp_eSWIdent.u8V3);
+	
+    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V0, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V1, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V2, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V3, PIT_UNSIGNEDBYTE);
 }
 void                HAL_SYS_Get_pProjectName    (char* pBuffer, size_t sizeOfBuffer)
 {
@@ -279,13 +285,16 @@ void                HAL_SYS_Get_pProjectName    (char* pBuffer, size_t sizeOfBuf
         pBuffer[i] = CstApp_eSWIdent.tu8VName[i];
     }    
 }
-void                HAL_SYS_Get_pBSPversion     (uint8_t* pBuffer, size_t sizeOfBuffer)
+void                HAL_SYS_Get_pBSPversion     (char* pBuffer, size_t sizeOfBuffer)
 {
     size_t pos = 0;
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", DstWVersion_eBspSWIdent.u8V0);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", DstWVersion_eBspSWIdent.u8V1);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x.", DstWVersion_eBspSWIdent.u8V2);
-    pos += 3; vUtil_eTinySprintf_Exe(&pBuffer[pos], (uint8_t*) "%02x" , DstWVersion_eBspSWIdent.u8V3);    
+	pos += ASC_vPrintInteger(&pBuffer[pos], (void*) &DstWVersion_eBspSWIdent.u8V0, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+	pos += ASC_vPrintInteger(&pBuffer[pos], (void*) &DstWVersion_eBspSWIdent.u8V1, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+	pos += ASC_vPrintInteger(&pBuffer[pos], (void*) &DstWVersion_eBspSWIdent.u8V2, PIT_UNSIGNEDBYTE);
+	pBuffer[pos] = '.'; pos++;
+	pos += ASC_vPrintInteger(&pBuffer[pos], (void*) &DstWVersion_eBspSWIdent.u8V3, PIT_UNSIGNEDBYTE);
 }
 ten_CanErrorList    HAL_WRITE_EEP               (void)
 {
@@ -301,19 +310,19 @@ ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, TstWJ1939_eT
     // Welchen J1939 Nachrichten Typ haben
     if(( Msg.id & 0x00FF0000L) == 0x00EF0000L )
     {   // ==> Wir haben eine gerichtete proprietary Nachricht!
-		pDest->u8Addr       = (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
-        pDest->u8Dst        = (uint8_t)  (( Msg.id & 0x0000FF00L)  >>  8); 
-        pDest->u16PGN       = (uint16_t)  (( Msg.id & 0x00FF0000L)  >>  8);            
+		pDest->u8Dst      	= (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
+        pDest->u8Addr       = (uint8_t)  (( Msg.id & 0x0000FF00L)  >>  8); 
+        pDest->u16PGN       = (uint16_t) (( Msg.id & 0x00FF0000L)  >>  8);            
     }
     else
-    {
-		pDest->u8Addr       = (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
-		pDest->u8Dst        = 0;
+    {	
+		pDest->u8Dst       	= (uint8_t)  (( Msg.id & 0x000000FFL)  >>  0);
+		pDest->u8Addr       = 0;
         pDest->u16PGN       = (uint16_t)  (( Msg.id & 0x00FFFF00L)  >>  8);        
     }
 
-    pDest->u8DataPage   = (uint8_t)  (( Msg.id & 0x01000000L)  >> 24);    
-    pDest->u8PrioType   = (uint8_t)  (( Msg.id & 0x1C000000L)  >> 26);    
+    pDest->u8DataPage   = 0;    // Wir benutzen die datapage option nicht...
+    pDest->u8PrioType   = 6;    // wir bekommen beim HAL_ConvertFrom nicht gesichert die Priority mit. Deshalb wird hier immer mit dieser gesendet.
     pDest->u8Remote     = 0; // Verboten im J1939 Bereich
 	return CANIO_ERR_OK;
 }
@@ -323,19 +332,23 @@ ten_CanErrorList    HAL_ConvertFrom             (TstWJ1939_eTPLMsgData Msg, tst_
     for(i=0; i<8; i++) pDest->data[i]  = Msg.pu8Data[i];
     pDest->len = (uint8_t) Msg.u16Length;
     pDest->id = 0;
-    pDest->id += ((((uint32_t)Msg.u8Addr    ) & 0x000000FF)  <<  0);
-    // Welchen J1939 Nachrichten Typ haben
+	// Welchen J1939 Nachrichten Typ haben
     if(( Msg.u16PGN & 0xFF00) == 0xEF00 )
-    {
-        pDest->id += ((((uint32_t)Msg.u8Dst     ) & 0x0000FF00)  <<  8); 
-        pDest->id += ((((uint32_t)Msg.u16PGN    ) & 0x00FF0000)  <<  8);        
+    {   // ==> Wir haben eine gerichtete proprietary Nachricht!
+		pDest->id       |= ((((uint32_t)Msg.u8Addr) & 0x000000FFL)  <<  0);
+        pDest->id       |= ((((uint32_t)Msg.u8Dst ) & 0x000000FFL)  <<  8); 
+        pDest->id       |= ((((uint32_t)Msg.u16PGN) & 0x0000FF00L)  <<  8);            
     }
     else
-    {        
-        pDest->id += ((((uint32_t)Msg.u16PGN    ) & 0x00FFFF00)  <<  8);        
+    {
+		pDest->id       |= ((((uint32_t)Msg.u8Addr) & 0x000000FFL)  <<  0);
+        
+        pDest->id       |= ((((uint32_t)Msg.u16PGN) & 0x0000FFFFL)  <<  8);         
     }
-    pDest->id += ((((uint32_t)Msg.u8DataPage) & 0x01000000)  << 24);    
-    pDest->id += ((((uint32_t)Msg.u8PrioType) & 0x1C000000)  << 26);
+		pDest->id       |= 0x18000000; // Wir bekommen die Priority nicht sicher mitgeteilt, weil die Erfinder dieser dollen Lib ein Feld doppelt benutzen, ohne mitzuteilen, wie man den Unterschied erkennt.
+										// Deshalb müssen wir hier pauschal mit der standard Priority senden...
+  
+    
 	return CANIO_ERR_OK;
 }
 
@@ -345,6 +358,47 @@ ten_CanErrorList    HAL_ConvertFrom             (TstWJ1939_eTPLMsgData Msg, tst_
 
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" , können eigene CAN Nachrichten eingefügt werden.
+tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    uint32_t InputValue = 0;   
+    uint8_t offset = 0; 
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    offset = CanRxMessage.data[0] - 0x11;
+        
+    if(HAL_IO_GET_Input((offset * 7) + 0, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 1, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 2, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 3, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 4, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 5, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (InputValue / 100 );
+    if(HAL_IO_GET_Input((offset * 7) + 6, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[7] = (uint8_t) (InputValue / 100 );
+    return  CanTxMessage;
+}
+
+tst_CANIO_Msg CAN_0x18_OUTPUT_GETCURR_Generic(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    uint32_t InputValue = 0;   
+    uint8_t offset = 0; 
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    offset = CanRxMessage.data[0] - 0x18;
+        
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 0, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 1, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 2, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 3, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 4, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 5, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (InputValue / 20 );
+    if(HAL_IO_GET_Input(45 + (offset * 7) + 6, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[7] = (uint8_t) (InputValue / 20 );
+    return  CanTxMessage;
+}
 
 
 tst_CAN_Handler_Entry CanHandlerList[] = 
@@ -365,6 +419,21 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0x06  , 0 , 0     , 0 , 0 , CAN_0x06_SYS_ProjectName          },
     // Input              
     { 0x10  , 0 , 200   , 0 , 0 , CAN_0x10_INPUT_GET                },
+	{ 0x11	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		}, 	// ACHTUNG!!! Anhand Mux wird automatisch durchgeschaltet
+	{ 0x12	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},	// Deshalb der gleiche Delegate
+	{ 0x13	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
+	{ 0x14	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
+	{ 0x15	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
+	{ 0x16	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
+	{ 0x17	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
+	{ 0x18	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x19	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1A	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1B	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1C	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1D	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1E	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	{ 0x1F	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
     // Output                 
     { 0x20  , 0 , 0     , 0 , 0 , CAN_0x20_OUTPUT_SET               },
     { 0x21  , 0 , 0     , 0 , 0 , CAN_0x21_OUTPUT_SAVESTATE         },
@@ -388,7 +457,7 @@ ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_Pa
     ten_CanErrorList result;
     int32_t readValue = 0;
     uint16_t ParameterType = 0;
-    if(LIB_IO_GET_ListSize() >= IOIndex) return CANIO_ERR_INDEX_OUTOFRANGE;
+    if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
     if(IO_getParameterTypeFromList(GenericIOList[IOIndex].HAL_ID, ParameterTypeSelecotr, &ParameterType) != ERR_OK) return CANIO_ERR_IOTYPE_DIFFERENT;    
     if(CES32WIO_2_tenProjectErrorList(GenericIOList[IOIndex].HAL_ID, s32WIO_eGetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, &readValue)) != ERR_OK) return CANIO_ERR_READ_FAIL;
         
@@ -399,6 +468,7 @@ ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue, ten_IO_
 {
     ten_CanErrorList result;
     uint16_t ParameterType = 0;
+	if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
     if(IO_getParameterTypeFromList(GenericIOList[IOIndex].HAL_ID, ParameterTypeSelecotr, &ParameterType) != ERR_OK) return CANIO_ERR_IOTYPE_DIFFERENT;    
     if(CES32WIO_2_tenProjectErrorList(GenericIOList[IOIndex].HAL_ID, s32WIO_eSetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, newValue)) != ERR_OK) return CANIO_ERR_READ_FAIL;
     

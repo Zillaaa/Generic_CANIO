@@ -64,8 +64,8 @@ typedef struct IOConfigList
     uint8_t isOutput;
     uint32_t SafeValue;
     uint32_t actualValue;    
+    uint32_t actualValue_MAX ;
     uint32_t actualValue_MIN;
-    uint32_t actualValue_MAX;
     uint32_t actualValue_TS;    
     void* pCustomData;
 }tst_IO_List_Entry;
@@ -106,13 +106,15 @@ ten_CanErrorList    HAL_ConvertFrom             (TstWJ1939_eTPLMsgData Msg, tst_
 ten_CanErrorList    HAL_update_SourceID         (uint8_t newSourceID);
 uint32_t            HAL_SYS_GET_Millis          (void);
 void                HAL_SYS_Get_SerialNumber    (char*, size_t);
-void                HAL_SYS_Get_ProjektVersion  (uint8_t*, size_t);
+void                HAL_SYS_Get_ProjektVersion  (char*, size_t);
 void                HAL_SYS_Get_pProjectName    (char*, size_t);
-void                HAL_SYS_Get_pBSPversion     (uint8_t*, size_t);
+void                HAL_SYS_Get_pBSPversion     (char*, size_t);
 ten_CanErrorList    HAL_WRITE_EEP               (void);
 
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" oben, können eigene CAN Nachrichten eingefügt werden.
+tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic        (tst_CANIO_Msg CanRxMessage);
+tst_CANIO_Msg CAN_0x18_OUTPUT_GETCURR_Generic   (tst_CANIO_Msg CanRxMessage);
 
 extern TstWVersion_eSWIdent CstApp_eSWIdent;
 

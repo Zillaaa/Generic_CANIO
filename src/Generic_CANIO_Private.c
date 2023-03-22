@@ -2,6 +2,8 @@
 #include "Generic_CANIO\include\Generic_CANIO_Private.h"
 #include "Generic_CANIO\include\Generic_CANIO_Public.h"
 
+const char hexdig[] = "0123456789ABCDEF";
+
 uint8_t     Generic_CAN_SourceID = CAN_ID_DEFAULT_SA;
 uint32_t    Generic_CAN_BusSpeed = CAN_ID_DEFAULT_SPEEED;
 uint8_t     Generic_CAN_rxCounter; 
@@ -138,7 +140,7 @@ uint32_t            LIB_CAN_Switch_RXTX             (uint32_t CanId)
     return newCanID;
 
 }
-int                 LIB_CAB_PrintString             (tst_CANIO_Msg* CanTxMessage, const char* pString)
+int                 LIB_CAN_PrintString             (tst_CANIO_Msg* CanTxMessage, const char* pString)
 {
     int i=0;
     static const char* pStringBackup = NULL;
@@ -153,14 +155,15 @@ int                 LIB_CAB_PrintString             (tst_CANIO_Msg* CanTxMessage
 
     CanTxMessage->data[1] = MUX1;
 
-    for(i=0; i<5; i++)
+    for(i=0; i<6; i++)
     {
-        char nextChar = pString[(MUX1 * 5) + i];        
-        CanTxMessage->data[2+i] = nextChar;
+        int8_t nextChar = pString[(MUX1 * 6) + i];        
+        CanTxMessage->data[7-i] = nextChar;
+        // NUll Terminierung erreicht?
         if(nextChar == 0) 
         {
             pStringBackup = NULL;
-            for(; i<5; i++) CanTxMessage->data[2+i] = 0;
+            for(; i<6; i++) CanTxMessage->data[7-i] = 0;
             break;
         }
     }
@@ -170,6 +173,7 @@ int                 LIB_CAB_PrintString             (tst_CANIO_Msg* CanTxMessage
     else return 0;
 
 }
+
 tst_CANIO_Msg       LIB_0xFF_CMD_FEHLER_DEFAULT     (tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
@@ -251,8 +255,128 @@ ten_CanErrorList    LIB_IO_SET_Output_Enable        (uint8_t index, ten_IO_Type 
     return result;
 }
 
-//############################################################# UserLibs: Mittelwertbildung #################################################################
+//############################################################# UserLibs: String Handling #################################################################
+// Copyright: Atlas GmbH => Detlef Hansen
+size_t ASC_vPrintInteger(char *intstr, void *i, ten_ASC_PrintType format)       
+{
+	uint8_t index;
+	uint8_t notzero;
+	uint32_t val, divider, digit;
+	int32_t  sval;
 
+
+	notzero = 0;
+	index=0;
+	if (format == PIT_HEXBYTE  ||  format == PIT_HEXWORD  ||  format == PIT_HEXLONG)
+	{
+		switch (format)
+		{
+			case PIT_HEXBYTE:
+				val = (uint32_t)(*(uint8_t *)i);
+				digit = 2;
+				break;
+
+			case PIT_HEXWORD:
+				val = (uint32_t)(*(uint16_t *)i);
+				digit = 4;
+				break;
+
+			case PIT_HEXLONG:
+				val = *(uint32_t *)i;
+				digit = 8;
+				break;
+		}
+
+		while (digit)
+		{
+			digit--;
+			intstr[index] = hexdig[(uint16_t)(0xF & (val>>(digit*4)))];
+			index++;
+		}
+	}
+	else
+	{
+		switch (format)
+		{
+			case PIT_SIGNEDBYTE:
+				sval = (int32_t)(*(int8_t *)i);
+				divider = 100;
+				break;
+	
+			case PIT_UNSIGNEDBYTE:
+				val = (uint32_t)(*(uint8_t *)i);
+				divider = 100;
+				break;
+	
+			case PIT_SIGNEDWORD:
+				sval = (int32_t)(*(int16_t *)i);
+				divider = 10000;
+				break;
+
+			case PIT_UNSIGNEDWORD:
+				val = (uint32_t)(*(uint16_t *)i);
+				divider = 10000;
+				break;
+	
+			case PIT_SIGNEDLONG:
+				sval = *(int32_t *)i;
+				divider = 1000000000;
+				break;
+	
+			case PIT_UNSIGNEDLONG:
+				val = (uint32_t)(*(uint32_t *)i);
+				divider = 1000000000;
+				break;
+		}
+		
+
+
+		if (format == PIT_SIGNEDBYTE || format == PIT_SIGNEDWORD || format == PIT_SIGNEDLONG)
+		{
+			if (sval < 0)
+			{
+				val = sval * -1;
+				intstr[index++]='-';
+			}
+			else
+			{
+				val = sval;
+			}
+		}
+
+		
+        if (val != 0)
+        {
+            while (divider>0)
+            {
+                if ((digit = val/divider) > 0)
+                {
+                    notzero = 1;
+                }
+                
+                if (notzero)
+                {
+                    intstr[index] = '0'+digit;
+                    index++;
+                }
+                val -= digit*divider;
+    
+                divider /= 10;
+            }
+        }
+        else
+        {
+            intstr[index] = '0';
+            index++;
+        }
+		
+	}
+
+	intstr[index]='\0';
+
+	return index;
+}
+//############################################################# UserLibs: Mittelwertbildung #################################################################
 uint16_t            LIB_Mittwerlwertbildung         (tst_LaufendeMittelwertBildung_Entry *pData, uint16_t newValue)
 {
     int i = 0;
