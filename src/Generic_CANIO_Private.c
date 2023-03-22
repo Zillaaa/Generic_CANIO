@@ -15,6 +15,7 @@ uint8_t     Generic_CAN_cmdCounter;
 
 void                Generic_CAN_Init                (uint8_t Source_ID)
 {
+    int i=0;
     Generic_CAN_SourceID    = Source_ID;
     Generic_CAN_SourceID    = CAN_ID_DEFAULT_SA;
     Generic_CAN_BusSpeed    = CAN_ID_DEFAULT_SPEEED;
@@ -23,6 +24,11 @@ void                Generic_CAN_Init                (uint8_t Source_ID)
     Generic_CAN_rxOverFlow  = 0;
     Generic_CAN_txOverFlow  = 0;
     Generic_CAN_cmdCounter  = 0;
+
+    for(i=0; i<GenericIOList_sizeof; i++)
+    {
+        GenericIOList[i] = GenericIOList_DEFAULT[i];
+    }
 }
 tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage)
 {    

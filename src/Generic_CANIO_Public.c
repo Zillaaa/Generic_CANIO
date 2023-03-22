@@ -8,6 +8,9 @@
 #define SYSTEM_CANIO_TX_CYCLE_MIN 100
 #define SYSTEM_CANIO_TX_CYCLE_MAX 60000
 
+// DEBUG:
+
+
 //############################################################# IO Handling #################################################################
 ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_Type, uint32_t *pReadValue)
 {
@@ -19,11 +22,11 @@ ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_T
     switch(GenericIOList[index].IO_Type)
     {
         default: result = CANIO_ERR_UNSUPPORTED; break;
-        case IO_INPUT_MV:       result = HAL_IO_GET_Input_mV     (GenericIOList[index].HAL_ID, &readValue); break;
-        case IO_INPUT_CURR:     result = HAL_IO_GET_Input_mA     (GenericIOList[index].HAL_ID, &readValue); break;
-        case IO_OUTPUT_PROM:    result = HAL_IO_GET_Output_ppm   (GenericIOList[index].HAL_ID, &readValue); break;
-        case IO_OUTPUT_SW:      result = HAL_IO_GET_Output_bool  (GenericIOList[index].HAL_ID, &readValue); break;
-        case IO_OUTPUT_CURR:    result = HAL_IO_GET_Output_mA    (GenericIOList[index].HAL_ID, &readValue); break;
+        case IO_INPUT_MV:       result = HAL_IO_GET_Input_mV     (index, &readValue); break;
+        case IO_INPUT_CURR:     result = HAL_IO_GET_Input_mA     (index, &readValue); break;
+        case IO_OUTPUT_PROM:    result = HAL_IO_GET_Output_ppm   (index, &readValue); break;
+        case IO_OUTPUT_SW:      result = HAL_IO_GET_Output_bool  (index, &readValue); break;
+        case IO_OUTPUT_CURR:    result = HAL_IO_GET_Output_mA    (index, &readValue); break;
         
     }
 
@@ -41,7 +44,8 @@ ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_T
 ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, ten_IO_Type IO_Type, uint32_t newValue)
 {
     ten_CanErrorList result = CANIO_ERR_OK;
-    if(index >= LIB_IO_GET_ListSize())                          return CANIO_ERR_INDEX_OUTOFRANGE;    
+    if(index >= LIB_IO_GET_ListSize())                          return CANIO_ERR_INDEX_OUTOFRANGE;        
+    
     if(GenericIOList[index].IO_Type != IO_Type)                 return CANIO_ERR_IOTYPE_DIFFERENT;
     if(GenericIOList[index].isOutput == 0)                      return CANIO_ERR_INDEX_NOT_OUTPUT; 
     if(GenericIOList[index].isEnabled == 0)                     return CANIO_ERR_OUTPUT_DISABLED;
@@ -51,9 +55,9 @@ ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, ten_IO_Type IO_T
     switch(GenericIOList[index].IO_Type)
     {
         default: result = CANIO_ERR_UNSUPPORTED; break;
-        case IO_OUTPUT_PROM:    result = HAL_IO_SET_Output_ppm   (GenericIOList[index].HAL_ID, newValue); break;
-        case IO_OUTPUT_SW:      result = HAL_IO_SET_Output_bool  (GenericIOList[index].HAL_ID, newValue); break;
-        case IO_OUTPUT_CURR:    result = HAL_IO_SET_Output_mA    (GenericIOList[index].HAL_ID, newValue); break;
+        case IO_OUTPUT_PROM:    result = HAL_IO_SET_Output_ppm   (index, newValue); break;
+        case IO_OUTPUT_SW:      result = HAL_IO_SET_Output_bool  (index, newValue); break;
+        case IO_OUTPUT_CURR:    result = HAL_IO_SET_Output_mA    (index, newValue); break;
         
         
     }

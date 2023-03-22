@@ -5,12 +5,13 @@
 #include "version.h"
 #include "IO_Handling.h"
 #include "util.h"
+#include "main_app.h"
 
 #define MINIMUM(a,b) ((a > b)? b : a)
 #define MAXIMUM(a,b) ((a > b)? a : b)
 
 
-tst_IO_List_Entry GenericIOList[] =
+const tst_IO_List_Entry GenericIOList_DEFAULT[] =
 {
 //	IO_Type		    HAL_ID	                    isEnabled		actualValue				actualValue_TS
 //	|			    |		                    |	isOutput	|		actualValue_MAX	|		pCustomData
@@ -61,10 +62,10 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_MV    , Ceu16WIO_eAN10			, 0 , 0 , 0     , 0     , 32000 , 0     , 0     , NULL},  
 	{IO_INPUT_MV    , Ceu16WIO_eAN11			, 0 , 0 , 0     , 0     , 32000 , 0     , 0     , NULL},  
 	{IO_INPUT_MV    , Ceu16WIO_eAN12			, 0 , 0 , 0     , 0     , 32000 , 0     , 0     , NULL},  
-	{IO_INPUT_MV    , Ceu16WIO_eAN13			, 0 , 0 , 0     , 0     , 32000 , 0     , 0     , NULL},  
+	{IO_INPUT_MV    , Ceu16WIO_eAN13			, 0 , 0 , 0     , 0     , 32000 , 0     , 0     , NULL},  // 44
 
 //  ##################################### Ausgänge Strommessung #####################################
-    {IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+    {IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  // 45
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_02	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_03	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_04	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
@@ -75,8 +76,9 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_09	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_10	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_11	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
-	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_12	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
-	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM2_12	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  
+
+	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  // 57
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_02	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_03	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_04	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
@@ -84,7 +86,8 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_06	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_07	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_PWM4_08	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
-	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+
+	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  // 65
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_02	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_03	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_04	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
@@ -98,7 +101,8 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_12	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_13	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG2_14	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
-	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+
+	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  // 79
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_02	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_03	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_04	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
@@ -118,7 +122,8 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_18	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_19	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eHSD_DIG4_20	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
-    {IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+
+    {IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_01	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},  // 99
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_02	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_03	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_04	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
@@ -126,8 +131,9 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_06	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_07	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
 	{IO_INPUT_CURR  , Ceu16WIO_eLSD_DIG_08	    , 0 , 0 , 0     , 0     , 5000  , 0     , 0     , NULL},      
+
 //  ##################################### Ausgänge Steuerung #####################################
-    {IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_01	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
+    {IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_01	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL}, // 107
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_02	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_03	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_04	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
@@ -139,7 +145,7 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_10	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_11	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM2_12	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
-	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_01	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
+	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_01	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL}, // 119
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_02	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_03	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_04	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
@@ -147,7 +153,7 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_06	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_07	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
 	{IO_OUTPUT_PROM , Ceu16WIO_eHSD_PWM4_08	    , 1 , 1 , 0     , 0     , 1000  , 0     , 0     , NULL},      
-	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
+	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL}, // 127
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_02	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_03	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_04	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
@@ -161,7 +167,7 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_12	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_13	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG2_14	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
-	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
+	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL}, // 141
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_02	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_03	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_04	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
@@ -181,7 +187,7 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_18	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_19	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eHSD_DIG4_20	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
-    {IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
+    {IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_01	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL}, // 161
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_02	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_03	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_04	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
@@ -189,22 +195,25 @@ tst_IO_List_Entry GenericIOList[] =
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_06	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_07	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL},      
 	{IO_OUTPUT_SW   , Ceu16WIO_eLSD_DIG_08	    , 1 , 1 , 0     , 0     , 1     , 0     , 0     , NULL}, 
-	{IO_UNKOWN	, 0		, 0 , 0	, 0		, 0		, 0		, 0		, 0		, 0		}	// NIEMALS VERAENDERN!!!!
+	{IO_UNKOWN	, 0		, 0 , 0	, 0		, 0		, 0		, 0		, 0		, 0		}	// NIEMALS VERAENDERN!!!! // 169
 };
+const size_t GenericIOList_sizeof = (sizeof(GenericIOList_DEFAULT) / sizeof(tst_IO_List_Entry)) + 1;
+tst_IO_List_Entry GenericIOList[GenericIOList_sizeof];
 
 
 //############################################################# PUBLIC HAL Funktionen #################################################################
 // Alle Hardware Abstraktion Handler müssen umgesetzt werden, damit die Library funktioniert!
 ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_ParamListe ParameterTypeSelecotr);
 ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue, ten_IO_ParamListe ParameterTypeSelecotr);
+ten_CanErrorList __convertResult(TU16 PinID, TS32 Ces32WIO_Result);
 
 ten_CanErrorList    HAL_IO_GET_Input_mV         (uint8_t IOIndex, uint32_t *pValue)
 {
-    return __common_ReadValue(IOIndex, pValue, ParamRawVoltage);
+    return __common_ReadValue(IOIndex, pValue, ParamFilteredVoltage);
 }
 ten_CanErrorList    HAL_IO_GET_Input_mA         (uint8_t IOIndex, uint32_t *pValue)
 {
-	return __common_ReadValue(IOIndex, pValue, ParamRawCurrent);
+	return __common_ReadValue(IOIndex, pValue, ParamFilteredCurrent);
 }
 ten_CanErrorList    HAL_IO_GET_Output_ppm       (uint8_t IOIndex, uint32_t *pValue)
 {
@@ -378,8 +387,7 @@ tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic(tst_CANIO_Msg CanRxMessage)
     if(HAL_IO_GET_Input((offset * 7) + 6, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[7] = (uint8_t) (InputValue / 100 );
     return  CanTxMessage;
 }
-
-tst_CANIO_Msg CAN_0x18_OUTPUT_GETCURR_Generic(tst_CANIO_Msg CanRxMessage)
+tst_CANIO_Msg CAN_0x30_OUTPUT_GETCURR_Generic(tst_CANIO_Msg CanRxMessage)
 {
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
     uint32_t InputValue = 0;   
@@ -388,7 +396,7 @@ tst_CANIO_Msg CAN_0x18_OUTPUT_GETCURR_Generic(tst_CANIO_Msg CanRxMessage)
     CanTxMessage.len = 8;
     
     CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
-    offset = CanRxMessage.data[0] - 0x18;
+    offset = CanRxMessage.data[0] - 0x30;
         
     if(HAL_IO_GET_Input(45 + (offset * 7) + 0, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (InputValue / 20 );
     if(HAL_IO_GET_Input(45 + (offset * 7) + 1, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (InputValue / 20 );
@@ -418,7 +426,7 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0x05  , 0 , 0     , 0 , 0 , CAN_0x05_SYS_BSPversion           },
     { 0x06  , 0 , 0     , 0 , 0 , CAN_0x06_SYS_ProjectName          },
     // Input              
-    { 0x10  , 0 , 200   , 0 , 0 , CAN_0x10_INPUT_GET                },
+    { 0x10  , 0 , 0   	, 0 , 0 , CAN_0x10_INPUT_GET                },
 	{ 0x11	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		}, 	// ACHTUNG!!! Anhand Mux wird automatisch durchgeschaltet
 	{ 0x12	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},	// Deshalb der gleiche Delegate
 	{ 0x13	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
@@ -426,18 +434,24 @@ tst_CAN_Handler_Entry CanHandlerList[] =
 	{ 0x15	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
 	{ 0x16	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
 	{ 0x17	, 1 , 100	, 0 , 0 , CAN_0x11_INPUT_GET_Generic		},
-	{ 0x18	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x19	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1A	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1B	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1C	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1D	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1E	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
-	{ 0x1F	, 1 , 100	, 0 , 0 , CAN_0x18_OUTPUT_GETCURR_Generic	},
+	
     // Output                 
     { 0x20  , 0 , 0     , 0 , 0 , CAN_0x20_OUTPUT_SET               },
     { 0x21  , 0 , 0     , 0 , 0 , CAN_0x21_OUTPUT_SAVESTATE         },
     { 0x22  , 0 , 0     , 0 , 0 , CAN_0x22_OUTPUT_SWITCHOFF         },
+
+	// SPU 7066 hat seeeeehr viele Ausgänge
+	{ 0x30	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x31	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x32	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x33	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x34	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x35	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x36	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x37	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+	{ 0x38	, 1 , 100	, 0 , 0 , CAN_0x30_OUTPUT_GETCURR_Generic	},
+
+	
     // Allgemeine Steuergeräte Befehle
     { 0xA0  , 0 , 0     , 0 , 0 , CAN_0xA0_CMD_BAUDRATE             },
     { 0xA1  , 0 , 0     , 0 , 0 , CAN_0xA1_CMD_SOURCE_ADR           },
@@ -459,19 +473,38 @@ ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_Pa
     uint16_t ParameterType = 0;
     if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
     if(IO_getParameterTypeFromList(GenericIOList[IOIndex].HAL_ID, ParameterTypeSelecotr, &ParameterType) != ERR_OK) return CANIO_ERR_IOTYPE_DIFFERENT;    
-    if(CES32WIO_2_tenProjectErrorList(GenericIOList[IOIndex].HAL_ID, s32WIO_eGetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, &readValue)) != ERR_OK) return CANIO_ERR_READ_FAIL;
-        
+    result = __convertResult(GenericIOList[IOIndex].HAL_ID, s32WIO_eGetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, &readValue));
+    SystemStates.DBG.Debug_U8 = GenericIOList[IOIndex].HAL_ID;
+	SystemStates.DBG.Debug_U16 = ParameterType;
+	SystemStates.DBG.Debug_U32 = readValue;
     *pValue = readValue;
-    return CANIO_ERR_OK;
+    return result;
 }
 ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue, ten_IO_ParamListe ParameterTypeSelecotr)
 {
     ten_CanErrorList result;
     uint16_t ParameterType = 0;
-	if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
+	if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;	
+	
     if(IO_getParameterTypeFromList(GenericIOList[IOIndex].HAL_ID, ParameterTypeSelecotr, &ParameterType) != ERR_OK) return CANIO_ERR_IOTYPE_DIFFERENT;    
-    if(CES32WIO_2_tenProjectErrorList(GenericIOList[IOIndex].HAL_ID, s32WIO_eSetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, newValue)) != ERR_OK) return CANIO_ERR_READ_FAIL;
-    
-    return CANIO_ERR_OK;
+	
+    return __convertResult(GenericIOList[IOIndex].HAL_ID, s32WIO_eSetVal_Exe(GenericIOList[IOIndex].HAL_ID, ParameterType, newValue));
 }
-
+ten_CanErrorList __convertResult(TU16 PinID, TS32 Ces32WIO_Result)
+{
+	ten_CanErrorList result = ERR_UNKOWN;
+	switch(Ces32WIO_Result) 
+	{
+		default: 					 result = CANIO_ERR_UNKOWN; break;
+		case Ces32WIO_eSuccessFull:  result = CANIO_ERR_OK; break;
+		case Ces32WIO_eNotPopulated: result = CANIO_ERR_NOT_POPULATED;  break;
+		case Ces32WIO_eBadParameter: result = CANIO_ERR_BAD_PARAMETER; break;
+		case Ces32WIO_eDriverError:  result = CANIO_ERR_SEE_DEBUG; //break;
+		{
+			TS32 DiagStatus = 0;
+			s32WIO_eGetVal_Exe(PinID, Du16WIO_eParamDiagStatus, &DiagStatus);				
+			
+		}break;
+	}
+	return result;
+}

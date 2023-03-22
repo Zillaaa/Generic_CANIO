@@ -44,7 +44,11 @@ typedef enum CANIO_ERROR_LIST
     CANIO_ERR_VALUE_OUTOFRANGE_MAX,
     CANIO_ERR_VALUE_OUTOFRANGE_MIN,
     CANIO_ERR_READ_FAIL,
-    CANIO_ERR_TX_FAIL
+    CANIO_ERR_TX_FAIL,
+    CANIO_ERR_WRITE_FAIL,
+    CANIO_ERR_NOT_POPULATED,
+    CANIO_ERR_BAD_PARAMETER,
+    CANIO_ERR_SEE_DEBUG
 }ten_CanErrorList;
 
 typedef struct CANIO_Message
@@ -71,6 +75,8 @@ typedef struct IOConfigList
 }tst_IO_List_Entry;
 
 extern tst_IO_List_Entry GenericIOList[];
+extern const tst_IO_List_Entry GenericIOList_DEFAULT[];
+extern const size_t GenericIOList_sizeof;
 
 typedef struct CAN_Handler_ListEntry
 {
@@ -114,7 +120,7 @@ ten_CanErrorList    HAL_WRITE_EEP               (void);
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" oben, können eigene CAN Nachrichten eingefügt werden.
 tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic        (tst_CANIO_Msg CanRxMessage);
-tst_CANIO_Msg CAN_0x18_OUTPUT_GETCURR_Generic   (tst_CANIO_Msg CanRxMessage);
+tst_CANIO_Msg CAN_0x30_OUTPUT_GETCURR_Generic   (tst_CANIO_Msg CanRxMessage);
 
 extern TstWVersion_eSWIdent CstApp_eSWIdent;
 

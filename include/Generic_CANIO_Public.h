@@ -33,6 +33,7 @@ tst_CANIO_Msg CAN_0xA2_CMD_TX_CYCLE         (tst_CANIO_Msg CanRxMessage);
 tst_CANIO_Msg CAN_0xA3_CMD_ERR_IGN          (tst_CANIO_Msg CanRxMessage);
 tst_CANIO_Msg CAN_0xB0_CMD_PWM_CNF          (tst_CANIO_Msg CanRxMessage);
 tst_CANIO_Msg CAN_0xD0_CMD_TaskHandle       (tst_CANIO_Msg CanRxMessage);
+tst_CANIO_Msg CAN_0xD0_CMD_Errorbits        (tst_CANIO_Msg CanRxMessage);
 
 
 
