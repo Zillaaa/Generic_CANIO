@@ -7,7 +7,7 @@ RightDockZones=00000800000100000000760300000000000001860100000000000001000000002
 MDITabIndex=1
 MaximizedMDIChildren=1
 WindowCount=7
-ClosedWindowsCount=1
+ClosedWindowsCount=3
 
 [ConnectionsWindow]
 Columns=ebncBsoqOl,-24,-40,215,215,110,90,80,80,80,130
@@ -31,10 +31,10 @@ Top=52
 Width=1282
 Height=486
 Style=3
-RcvSize=637
+RcvSize=658
 SplitState=1
 HexViewSize=60
-HexViewVisible=1
+HexViewVisible=0
 
 [2]
 Name=Window1_OutputWindow
@@ -50,7 +50,7 @@ FloatWidth=500
 FloatHeight=200
 Style=2
 DockedTo=RightDockPanel
-TabIndex=0
+TabIndex=1
 SplitPos=153
 
 [3]
@@ -95,7 +95,7 @@ Style=2
 DockedTo=RightDockPanel
 TabIndex=0
 ExpandedFolders=
-ExpandedItems=
+ExpandedItems=Botschaftsfilter
 
 [6]
 Name=Window1_7A8A32C4B71840D69B8B688F6DEF3068
@@ -122,6 +122,21 @@ Height=486
 SelCol=34
 SelLine=126
 FirstVisibleLine=91
+
+[Closed1]
+Ident=Trace1.trc
+Left=78
+Top=78
+Width=1256
+Height=588
+HexViewSize=60
+
+[Closed2]
+Ident=Line Writer1
+Left=104
+Top=104
+Width=1256
+Height=588
 
 [WatchWindow]
 Columns=nvm

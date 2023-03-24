@@ -2,12 +2,16 @@
 #define GENERIC_CANIO_INTERFACE_H
 
 
+// Include User Libs here
+#include "user_code.h"
+
 typedef TU8 uint8_t;
 typedef TU16 uint16_t;
 typedef TU32 uint32_t;
 typedef TS8 int8_t;
 typedef TS16 int16_t;
 typedef TS32 int32_t;
+typedef bios_can_msg_typ sys_can_msg_t;
 
 typedef enum IO_List_Types
 {
@@ -61,8 +65,8 @@ typedef struct IOConfigList
     uint8_t isOutput;
     uint32_t SafeValue;
     uint32_t actualValue;    
-    uint32_t actualValue_MAX;
-    uint32_t actualValue_MIN;    
+    uint32_t actualValue_MAX ;
+    uint32_t actualValue_MIN;
     uint32_t actualValue_TS;    
     void* pCustomData;
 }tst_IO_List_Entry;
@@ -112,6 +116,9 @@ ten_CanErrorList    HAL_WRITE_EEP               (void);
 
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" oben, können eigene CAN Nachrichten eingefügt werden.
+tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic        (tst_CANIO_Msg CanRxMessage);
+tst_CANIO_Msg CAN_0x30_OUTPUT_GETCURR_Generic   (tst_CANIO_Msg CanRxMessage);
 
+extern TstWVersion_eSWIdent CstApp_eSWIdent;
 
 #endif

@@ -1,0 +1,313 @@
+FormatVersion=5.0 // Do not edit this line!
+Title="GenericCANIO"
+
+{ENUMS}
+enum Generic_CANIO_CMD_Result(0="CANIO_ERR_OK", 1="CANIO_ERR_UNKOWN", 
+  2="CANIO_ERR_NOTIMPLEMENTED", 3="CANIO_ERR_OUTOFRANGE", 
+  4="CANIO_ERR_NOTFOUND", 5="CANIO_ERR_MAGICNUMBER_FAIL", 
+  6="CANIO_ERR_UNSUPPORTED", 7="CANIO_ERR_INDEX_NOTFOUND", 
+  8="CANIO_ERR_OUTPUT_DISABLED", 9="CANIO_ERR_EEP_PATTERNWRONG", 
+  10="CANIO_ERR_EEP_CHECKSUMWRONG", 11="CANIO_ERR_INDEX_OUTOFRANGE", 
+  12="CANIO_ERR_INDEX_NOT_OUTPUT", 13="CANIO_ERR_IOTYPE_DIFFERENT", 
+  14="CANIO_ERR_VALUE_OUTOFRANGE_MAX", 15="CANIO_ERR_VALUE_OUTOFRANGE_MIN", 
+  16="CANIO_ERR_READ_FAIL", 17="CANIO_ERR_TX_FAIL", 18="CANIO_ERR_WRITE_FAIL", 
+  19="CANIO_ERR_NOT_POPULATED", 20="CANIO_ERR_BAD_PARAMETER", 
+  21="CANIO_ERR_SEE_DEBUG")
+enum Generic_CANIO_IOTYPE(0="IO_UNKOWN", 1="IO_INPUT_MV", 2="IO_INPUT_CURR", 
+  3="IO_OUTPUT_SW", 4="IO_OUTPUT_PROM", 5="IO_OUTPUT_CURR")
+
+{SENDRECEIVE}
+
+[GENERIC_CANIO]
+ID=18EF0000h
+Type=J1939PG
+Mux=CAN_0x01_SYS_BuildDate 0,8 1  -t
+Var=CAN_0x01_STR_Index unsigned 8,8
+Var=CAN_0x01_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x02_SYS_BuildTime 0,8 2  -t
+Var=CAN_0x02_STR_Index unsigned 8,8
+Var=CAN_0x02_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x03_SYS_SerNum 0,8 3  -t
+Var=CAN_0x03_STR_Index unsigned 8,8
+Var=CAN_0x03_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x04_SYS_SWversion 0,8 4  -t
+Var=CAN_0x04_STR_Index unsigned 8,8
+Var=CAN_0x04_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x05_SYS_BSPversion 0,8 5  -t
+Var=CAN_0x05_STR_Index unsigned 8,8
+Var=CAN_0x05_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x06_SYS_ProjectName 0,8 6  -t
+Var=CAN_0x06_STR_Index unsigned 8,8
+Var=CAN_0x06_STR string 16,48
+
+[GENERIC_CANIO]
+Mux=CAN_0x10_INPUT_GET 0,8 10h
+Var=CAN_0x10_IOSelector unsigned 8,8
+Var=CAN_0x10_InputValue unsigned 24,32
+Var=CAN_0x10_Result unsigned 56,8 /e:Generic_CANIO_CMD_Result
+Var=CAN_0x10_IOType unsigned 16,8 /e:Generic_CANIO_IOTYPE
+
+[GENERIC_CANIO]
+Mux=CAN_0x20_OUTPUT_SET 0,8 20h
+Var=CAN_0x20_InputSelector unsigned 8,8
+Var=CAN_0x20_NewValue unsigned 24,16
+Var=CAN_0x20_MagicNumber unsigned 40,16 /min:56344 /max:56344 /d:56344 /ln:"Zur Sicherheit, damit keiner versehentlich Ausgänge schalten kann."
+Var=CAN_0x20_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+Var=CAN_0x20_IOType unsigned 16,8 /e:Generic_CANIO_IOTYPE
+
+[GENERIC_CANIO]
+Mux=CAN_0xA0_CMD_BAUDRATE 0,8 A0h
+Var=CAN_0xA0_BaudrateIndex unsigned 8,32 /u:Baud /max:1
+Var=CAN_0xA0_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO]
+Mux=CAN_0xA1_CMD_SOURCE_ADR 0,8 A1h
+Var=CAN_0xA1_NewSA unsigned 8,8 /max:1
+Var=CAN_0xA1_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO]
+Mux=CAN_0x21_OUTPUT_SAVESTATE 0,8 21h
+Var=CAN_0x21_InputSelector unsigned 8,8
+Var=CAN_0x21_SafeStateValue unsigned 16,16
+Var=CAN_0x21_MagicNumber unsigned 32,16 /min:8874 /max:8874 /d:8874
+Var=CAN_0x21_Result unsigned 56,8 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO]
+Mux=CAN_0x22_OUTPUT_SWITCHOFF 0,8 22h
+Var=CAN_0x22_InputSelector unsigned 8,8
+Var=CAN_0x22_newValue unsigned 16,8
+Var=CAN_0x22_MagicNumber unsigned 24,16 /min:57411 /max:57411 /d:57411
+Var=CAN_0x22_Result unsigned 56,8
+
+[GENERIC_CANIO]
+Mux=CAN_0xA2_CMD_TX_CYCLE 0,8 A2h
+Var=CAN_0xA2_Selector unsigned 8,8
+Var=CAN_0xA2_Cycle_ms unsigned 16,16 /u:ms
+Var=CAN_0xA2_Result unsigned 56,8 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+ID=18FFBB00h
+Type=J1939PG
+Mux=CAN_0x00_BC_PING 0,8 0 
+Var=CAN_0x00_BC_Runtime unsigned 8,8 /u:s
+Var=CAN_0x00_BC_CAN_RX unsigned 16,8 /u:x
+Var=CAN_0x00_BC_CAN_TX unsigned 24,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_TX unsigned 40,8 /u:x
+Var=CAN_0x00_BC_CAN_CMD unsigned 48,8 /u:x
+Var=CAN_0x00_BC_CAN_OF_RX unsigned 32,8 /u:x
+Var=CAN_0x00_BC_SYS_CURR unsigned 56,8 /u:mA
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x21_BC_OUTPUT_STATUS 0,8 21h
+Var=CAN_0x21_OUTPUT_Value0 unsigned 8,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Value1 unsigned 16,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Value2 unsigned 24,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Value3 unsigned 32,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Value4 unsigned 40,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Value5 unsigned 48,8 /u:mA /f:0.1
+Var=CAN_0x21_OUTPUT_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x22_BC_OUTPUT_STATUS 0,8 22h
+Var=CAN_0x22_OUTPUT_Value6 unsigned 8,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Value7 unsigned 16,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Value8 unsigned 24,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Value9 unsigned 32,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Value10 unsigned 40,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Value11 unsigned 48,8 /u:mA /f:0.1
+Var=CAN_0x22_OUTPUT_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x23_BC_OUTPUT_STATUS 0,8 23h
+Var=CAN_0x23_OUTPUT_Value13 unsigned 8,8 /u:mA /f:0.1
+Var=CAN_0x23_OUTPUT_Value14 unsigned 16,8 /u:mA /f:0.1
+Var=CAN_0x23_OUTPUT_Value15 unsigned 24,8 /u:mA /f:0.1
+Var=CAN_0x23_OUTPUT_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0xD1_CMD_TaskHandle 0,8 D1h
+Var=CAN_0xD1_CMD_Task0 unsigned 8,16 /u:ms
+Var=CAN_0xD1_CMD_Task1 unsigned 24,16 /u:ms
+Var=CAN_0xD1_CMD_Task2 unsigned 40,16 /u:ms
+Var=CAN_0xD1_CMD_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0xD2_CMD_TaskHandle 0,8 D2h
+Var=CAN_0xD2_CMD_Task3 unsigned 8,16 /u:ms
+Var=CAN_0xD2_CMD_Task4 unsigned 24,16 /u:ms
+Var=CAN_0xD2_CMD_Task5 unsigned 40,16 /u:ms
+Var=CAN_0xD2_CMD_Result unsigned 56,8 /max:1 /e:Generic_CANIO_CMD_Result
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x11_INPUT_ANA 0,8 11h
+Var=CAN_0x11_INPUT_UN01 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN02 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN03 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN04 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN05 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN06 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x11_INPUT_UN07 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x12_INPUT_ANA 0,8 12h
+Var=CAN_0x12_INPUT_UN08 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN09 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN10 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN11 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN12 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN13 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x12_INPUT_UN14 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x13_INPUT_ANA 0,8 13h
+Var=CAN_0x13_INPUT_UN15 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN16 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN17 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN18 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN19 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN20 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x13_INPUT_UN21 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x14_INPUT_ANA 0,8 14h
+Var=CAN_0x14_INPUT_UN22 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN23 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN24 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN25 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN26 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN27 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x14_INPUT_UN28 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x15_INPUT_ANA 0,8 15h
+Var=CAN_0x15_INPUT_UN29 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_UN30 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_UN31 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_UN32 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_AN01 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_AN02 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x15_INPUT_AN03 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x16_INPUT_ANA 0,8 16h
+Var=CAN_0x16_INPUT_AN04 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN05 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN06 unsigned 24,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN07 unsigned 32,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN08 unsigned 40,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN09 unsigned 48,8 /u:V /f:0.1
+Var=CAN_0x16_INPUT_AN10 unsigned 56,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x17_INPUT_ANA 0,8 17h
+Var=CAN_0x17_INPUT_AN11 unsigned 8,8 /u:V /f:0.1
+Var=CAN_0x17_INPUT_AN12 unsigned 16,8 /u:V /f:0.1
+Var=CAN_0x17_INPUT_AN13 unsigned 24,8 /u:V /f:0.1
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x30_OUTPUT_CURR 0,8 30h
+Var=CAN_0x30_OUTPUT_HSD_PWM2_01 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_02 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_03 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_04 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_05 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_06 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x30_OUTPUT_HSD_PWM2_07 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x31_OUTPUT_CURR 0,8 31h
+Var=CAN_0x31_OUTPUT_HSD_PWM2_08 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM2_09 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM2_10 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM2_11 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM2_12 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM4_01 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x31_OUTPUT_HSD_PWM4_02 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x32_OUTPUT_CURR 0,8 32h
+Var=CAN_0x32_OUTPUT_HSD_PWM4_03 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_PWM4_04 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_PWM4_05 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_PWM4_06 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_PWM4_07 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_PWM4_08 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x32_OUTPUT_HSD_DIG2_01 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x33_OUTPUT_CURR 0,8 33h
+Var=CAN_0x33_OUTPUT_HSD_DIG2_02 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_03 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_04 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_05 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_06 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_07 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x33_OUTPUT_HSD_DIG2_08 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x34_OUTPUT_CURR 0,8 34h
+Var=CAN_0x34_OUTPUT_HSD_DIG2_09 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG2_10 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG2_11 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG2_12 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG2_13 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG2_14 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x34_OUTPUT_HSD_DIG4_01 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x35_OUTPUT_CURR 0,8 35h
+Var=CAN_0x35_OUTPUT_HSD_DIG4_02 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_03 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_04 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_05 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_06 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_07 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x35_OUTPUT_HSD_DIG4_08 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x36_OUTPUT_CURR 0,8 36h
+Var=CAN_0x36_OUTPUT_HSD_DIG4_09 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_10 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_11 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_12 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_13 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_14 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x36_OUTPUT_HSD_DIG4_15 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x37_OUTPUT_CURR 0,8 37h
+Var=CAN_0x37_OUTPUT_HSD_DIG4_16 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_HSD_DIG4_17 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_HSD_DIG4_18 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_HSD_DIG4_19 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_HSD_DIG4_20 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_LSD_DIG_01 unsigned 48,8 /u:mA /f:20
+Var=CAN_0x37_OUTPUT_LSD_DIG_02 unsigned 56,8 /u:mA /f:20
+
+[GENERIC_CANIO_BROADCAST]
+Mux=CAN_0x38_OUTPUT_CURR 0,8 38h
+Var=CAN_0x38_OUTPUT_LSD_DIG_03 unsigned 8,8 /u:mA /f:20
+Var=CAN_0x38_OUTPUT_LSD_DIG_04 unsigned 16,8 /u:mA /f:20
+Var=CAN_0x38_OUTPUT_LSD_DIG_05 unsigned 24,8 /u:mA /f:20
+Var=CAN_0x38_OUTPUT_LSD_DIG_06 unsigned 32,8 /u:mA /f:20
+Var=CAN_0x38_OUTPUT_LSD_DIG_07 unsigned 40,8 /u:mA /f:20
+Var=CAN_0x38_OUTPUT_LSD_DIG_08 unsigned 48,8 /u:mA /f:20
+
+[Debugging]
+ID=18FF1010h
+Type=Extended
+Mux=DEBUG 0,8 0Ch
+Var=Debug32 unsigned 8,32
+Var=Debug16 unsigned 40,16
+Var=Debug8 unsigned 56,8
+

@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PCANExplorerProject Version="5.0" Name="Generic_CANIO">
     <Connections AutoReset="0" IgnoreRTRLength="0" ProcessRTR="1" ProcessJ1939Requests="1" CTSPacksCount="255" ReCTSCount="3" RTSPacksCount="255" RetriesCount="3">
-        <Connection Bus="1" Enabled="1" Protocol="1" CalcBusLoad="1" SymbolsFileName="GenericCANIO.sym" BitRate="284" J1939Name="0" ClaimAddressOnStartup="0" PreferredAddress="0" Monitoring="1" AddressingProtocolEnabled="0" ReassembleIncomingPackets="1" Connection="AtlasStandard@pcan_usb" Name="Verbindung1"/>
+        <Connection Bus="1" Enabled="1" Protocol="1" CalcBusLoad="1" SymbolsFileName="GenericCANIO.sym" BitRate="284" J1939Name="0" ClaimAddressOnStartup="0" PreferredAddress="0" Monitoring="1" AddressingProtocolEnabled="0" ReassembleIncomingPackets="1" Connection="SPU7066_Flash@pcan_usb" Name="Verbindung1"/>
     </Connections>
-    <MessageFilters/>
+    <MessageFilters>
+        <MessageFilter Name="Strings">
+            <MessageFilterItem Type="3" Bus="0"/>
+        </MessageFilter>
+    </MessageFilters>
     <TransmitList>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="01" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="02" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="03" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="04" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="05" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="06" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="100A" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="200A000018DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418320385" Type="2" DLC="8" Data="01" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="02" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="03" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="04" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="05" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="06" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="100001" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="2018204E18DC" Creator="Benutzer" DA="16" Destination="16"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A0" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A1" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="21000000AA22" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="22080043E0" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A213F401" Creator="Benutzer" DA="204" Destination="204"/>
-        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="200AF40118DC" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="200AF40118DC" Creator="Benutzer" DA="16" Destination="16"/>
     </TransmitList>
     <Files>
         <File RelativePath="GenericCANIO.sym"/>
