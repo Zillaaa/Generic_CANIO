@@ -1,7 +1,7 @@
 
 
-#include "Generic_CANIO_Public.h"
-#include "Generic_CANIO_Private.h"
+#include "Generic_CANIO\include\Generic_CANIO_Public.h"
+#include "Generic_CANIO\include\Generic_CANIO_Private.h"
 #define CAN_ID_MUX_0X22_MAGIC       57411
 #define CAN_ID_MUX_0X21_MAGIC       8874
 #define CAN_ID_MUX_0X20_MAGIC       56344
@@ -339,7 +339,7 @@ tst_CANIO_Msg CAN_0xA1_CMD_SOURCE_ADR(tst_CANIO_Msg CanRxMessage)
     if((CanRxMessage.data[1] > 0) && (CanRxMessage.data[1] < 0xFF))
     {
         
-        HAL_update_SourceID(CanRxMessage.data[1]);        
+        (void)HAL_update_SourceID(CanRxMessage.data[1]);        
         CanTxMessage.data[7] = (uint8_t) HAL_WRITE_EEP();        
     }
     else    CanTxMessage.data[7] = CANIO_ERR_OUTOFRANGE;

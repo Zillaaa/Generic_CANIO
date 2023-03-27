@@ -1,6 +1,6 @@
 #ifndef GENERIC_CANIO_PRIVATE_H
 #define GENERIC_CANIO_PRIVATE_H
-#include "Generic_CANIO_interface_SPU7066.h"
+#include "Generic_CANIO\include\Generic_CANIO_interface_MRS.h"
 
 
 #define CAN_ID_PGN_RX_CMD	        0xEF00L

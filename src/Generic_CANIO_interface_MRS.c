@@ -1,110 +1,121 @@
 
-#include "Generic_CANIO_interface_MRS.h"
-#include "Generic_CANIO_Public.h"
-#include "Generic_CANIO_Private.h"
+#include "Generic_CANIO\include\Generic_CANIO_interface_MRS.h"
+#include "Generic_CANIO\include\Generic_CANIO_Public.h"
+#include "Generic_CANIO\include\Generic_CANIO_Private.h"
 
+const char* pProjectName = SYSTEM_NAME;
+const char* pProjektVersion = SYSTEM_VERS;
 
 #define MINIMUM(a,b) ((a > b)? b : a)
 #define MAXIMUM(a,b) ((a > b)? a : b)
 
-const tst_IO_List_Entry GenericIOList_DEFAULT[] =
-{
+tst_IO_List_Entry GenericIOList[] = {
     //IO_Type;
     //              HAL_ID;    
     //              |                           Enabled;        Output Only, Deaktiviert das Ändern des Ausgangszustands
-    //              |                           |   SafeValue;  Output Only, Wird im Fehlerfall oder beim Start Eingestellt
-    //              |                           |   |   actualValue;                    Der zuletzt bekannte Zustand
-    //              |                           |   |   |   actualValue_MIN;            Zustandswert MIN Wert
-    //              |                           |   |   |   |   actualValue_MAX;                     MAX Wert
-    //              |                           |   |   |   |   |       actualValue_TS; Zeitpunkt der letzten Zustands-Wert-Änderung
+    //              |                           |   isOutput
+    //              |                           |   |   SafeValue;  Output Only, Wird im Fehlerfall oder beim Start Eingestellt
+    //              |                           |   |   |   actualValue;                    Der zuletzt bekannte Zustand
+    //              |                           |   |   |   |   actualValue_MIN;            Zustandswert MIN Wert
+    //              |                           |   |   |   |   |   actualValue_MAX;                     MAX Wert
+    //              |                           |   |   |   |   |   |       actualValue_TS; Zeitpunkt der letzten Zustands-Wert-Änderung
+    //              |                           |   |   |   |   |   |       |   pCustomData
 //  ##################################### Analoge Eingänge #####################################
-    {IO_OUTPUT_SW   , OUT_HSD0                  , 1 , 0 , 0 , 0 , 1     , 0},   // 0
-    {IO_OUTPUT_SW   , OUT_HSD1                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD2                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD3                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD4                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD5                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD6                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_SW   , OUT_HSD7                  , 1 , 0 , 0 , 0 , 1     , 0},
-    {IO_OUTPUT_PROM , OUT_HSD0                  , 1 , 0 , 0 , 0 , 1000  , 0},   // 8
-    {IO_OUTPUT_PROM , OUT_HSD1                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD2                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD3                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD4                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD5                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD6                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_OUTPUT_PROM , OUT_HSD7                  , 1 , 0 , 0 , 0 , 1000  , 0},
-    {IO_INPUT_MV    , ANA0                      , 0 , 0 , 0 , 0 , 34080 , 0},   // 16
-    {IO_INPUT_MV    , ANA1                      , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA2                      , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA3                      , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA4                      , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA5                      , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA_IO0                   , 0 , 0 , 0 , 0 , 12000 , 0},   // 22
-    {IO_INPUT_MV    , ANA_IO1                   , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA_IO2                   , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA_IO3                   , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA_IO4                   , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_MV    , ANA_IO5                   , 0 , 0 , 0 , 0 , 12000 , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD0             , 0 , 0 , 0 , 0 , 2500  , 0},   // 28
-    {IO_INPUT_CURR  , STAT_ANA_HSD1             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD2             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD3             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD4             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD5             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD6             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_INPUT_CURR  , STAT_ANA_HSD7             , 0 , 0 , 0 , 0 , 2500  , 0},
-    {IO_UNKOWN      , 0                         , 0 , 0 , 0 , 0 , 0     , 0}
+    {IO_OUTPUT_SW   , OUT_HSD0                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},   // 0
+    {IO_OUTPUT_SW   , OUT_HSD1                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD2                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD3                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD4                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD5                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD6                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_SW   , OUT_HSD7                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD0                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},   // 8
+    {IO_OUTPUT_PROM , OUT_HSD1                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD2                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD3                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD4                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD5                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD6                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD7                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_INPUT_MV    , ANA0                      , 0 , 0 , 0 , 0 , 0 , 34080 , 0, NULL},   // 16
+    {IO_INPUT_MV    , ANA1                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA2                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA3                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA4                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA5                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA_IO0                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},   // 22
+    {IO_INPUT_MV    , ANA_IO1                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA_IO2                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA_IO3                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA_IO4                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_MV    , ANA_IO5                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD0             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},   // 28
+    {IO_INPUT_CURR  , STAT_ANA_HSD1             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD2             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD3             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD4             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD5             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD6             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_INPUT_CURR  , STAT_ANA_HSD7             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
+    {IO_UNKOWN      , 0                         , 0 , 0 , 0 , 0 , 0 , 0     , 0, NULL}
 };
-const size_t GenericIOList_sizeof = (sizeof(GenericIOList_DEFAULT) / sizeof(tst_IO_List_Entry)) + 1;
-tst_IO_List_Entry GenericIOList[GenericIOList_sizeof];
+const size_t GenericIOList_sizeof = (sizeof(GenericIOList) / sizeof(tst_IO_List_Entry)) + 1;
+
 
 //############################################################# PUBLIC HAL Funktionen #################################################################
 // Alle Hardware Abstraktion Handler müssen umgesetzt werden, damit die Library funktioniert!
-ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_ParamListe ParameterTypeSelecotr);
-ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue, ten_IO_ParamListe ParameterTypeSelecotr);
+ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue);
+ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue);
+uint16_t            __common_current_calc            (uint16_t newValue);
 
 ten_CanErrorList    HAL_IO_GET_Input_mV         (uint8_t IOIndex, uint32_t *pValue)
 {
-    return CANIO_ERR_NOTIMPLEMENTED;
+    return __common_ReadValue(IOIndex, pValue);
 }
 ten_CanErrorList    HAL_IO_GET_Input_mA         (uint8_t IOIndex, uint32_t *pValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_ReadValue(IOIndex, pValue);
 }
 ten_CanErrorList    HAL_IO_GET_Output_ppm       (uint8_t IOIndex, uint32_t *pValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_ReadValue(IOIndex, pValue);
 }
 ten_CanErrorList    HAL_IO_GET_Output_bool      (uint8_t IOIndex, uint32_t *pValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_ReadValue(IOIndex, pValue);
 }
 ten_CanErrorList    HAL_IO_GET_Output_mA        (uint8_t IOIndex, uint32_t *pValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_ReadValue(IOIndex, pValue);
 }
 ten_CanErrorList    HAL_IO_SET_Output_ppm       (uint8_t IOIndex, uint32_t newValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_WriteValue(IOIndex, newValue);
 }
 ten_CanErrorList    HAL_IO_SET_Output_bool      (uint8_t IOIndex, uint32_t newValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_WriteValue(IOIndex, newValue);
 }
 ten_CanErrorList    HAL_IO_SET_Output_mA        (uint8_t IOIndex, uint32_t newValue)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	return __common_WriteValue(IOIndex, newValue);
 }
 ten_CanErrorList    HAL_CAN_SendMsg             (tst_CANIO_Msg *Msg2Send)
 {
-    sys_can_msg_t SendMessage = ConvertTo(*Msg2Send);
-   (void)bios_can_send_msg(&SendMessage);
-   return CANIO_ERR_NOTIMPLEMENTED;
+    bios_can_msg_typ SendMessage = {0};
+    ten_CanErrorList result = HAL_ConvertTo(*Msg2Send, &SendMessage);
+    if(result == CANIO_ERR_OK)
+    {
+        CANtxCounter++;
+        (void)bios_can_send_msg(&SendMessage);
+    }
+    return result;
 }
 ten_CanErrorList    HAL_update_SourceID         (uint8_t newSourceID)
 {
-    return CANIO_ERR_NOTIMPLEMENTED;
+    void EEP_update_SourceID(uint8_t newSourceID);
+    EEP_update_SourceID(newSourceID);
+    return CANIO_ERR_OK;
 }
 uint32_t            HAL_SYS_GET_Millis          (void)
 {
@@ -112,55 +123,70 @@ uint32_t            HAL_SYS_GET_Millis          (void)
 }
 void                HAL_SYS_Get_SerialNumber    (char* pBuffer, size_t sizeOfBuffer)
 {
-    int i=0;
-    for(i=0; i< MINIMUM(sizeOfBuffer, Du16WInfo_eECUHWSerialNumberSize); i++)
-    {
-        pBuffer[i] = DstWInfo_eFactoryData.tu8ECUHWSerialNumber_Str[i];
-    }
+    size_t pos = 0;
+    unsigned long Seriennummer; 
+    (void)IEE1_GetData(EEPROM_Adresse_Seriennummer,(byte*)&Seriennummer,EEPROM_LEN_Seriennummer);	
+    
+    pos += ASC_vPrintInteger(&pBuffer[pos], &Seriennummer, PIT_HEXLONG);
+	
 }
 void                HAL_SYS_Get_ProjektVersion  (uint8_t* pBuffer, size_t sizeOfBuffer)
 {
-    size_t pos = 0;
-	
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V0, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V1, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V2, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V3, PIT_UNSIGNEDBYTE);
+    int i=0;
+    for(i=0; i< MINIMUM(sizeOfBuffer, strlen(pProjektVersion)); i++)
+    {
+        pBuffer[i] = pProjektVersion[i];
+    }   
 }
 void                HAL_SYS_Get_pProjectName    (char* pBuffer, size_t sizeOfBuffer)
 {
     int i=0;
-    for(i=0; i< MINIMUM(sizeOfBuffer, Du16WVersion_eVNameSize); i++)
+    for(i=0; i< MINIMUM(sizeOfBuffer, strlen(pProjectName) + 1) - 1; i++)
     {
-        pBuffer[i] = CstApp_eSWIdent.tu8VName[i];
+        pBuffer[i] = pProjectName[i];
     }    
+    pBuffer[i] = 0;
 }
 void                HAL_SYS_Get_pBSPversion     (uint8_t* pBuffer, size_t sizeOfBuffer)
 {
-    size_t pos = 0;
-	
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V0, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V1, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V2, PIT_UNSIGNEDBYTE);
-	pBuffer[pos] = '.'; pos++;
-    pos += ASC_vPrintInteger(&pBuffer[pos], &CstApp_eSWIdent.u8V3, PIT_UNSIGNEDBYTE);   
+    pBuffer[0] = 0;
+    //NOT AVAILABLE  
 }
 ten_CanErrorList    HAL_WRITE_EEP               (void)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+	ten_CanErrorList EEP_Write(void);
+    return EEP_Write();
 }
-ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, sys_can_msg_t* pDest)
+ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, sys_can_msg_t* newMessage)
 {
-   return CANIO_ERR_NOTIMPLEMENTED;
+    newMessage->data[0]  = Msg.data[0];
+    newMessage->data[1]  = Msg.data[1];
+    newMessage->data[2]  = Msg.data[2];
+    newMessage->data[3]  = Msg.data[3];
+    newMessage->data[4]  = Msg.data[4];
+    newMessage->data[5]  = Msg.data[5];
+    newMessage->data[6]  = Msg.data[6];
+    newMessage->data[7]  = Msg.data[7];
+    newMessage->id       = Msg.id;
+    newMessage->id_ext   = 1;
+    newMessage->len      = Msg.len;
+    newMessage->prty     = 0;
+    newMessage->remote_tx = 0;
+   return CANIO_ERR_OK;
 }
-ten_CanErrorList    HAL_ConvertFrom             (sys_can_msg_t Msg, tst_CANIO_Msg* pDest)
+ten_CanErrorList    HAL_ConvertFrom             (sys_can_msg_t Msg, tst_CANIO_Msg* newMessage)
 {
-	return CANIO_ERR_NOTIMPLEMENTED;
+    newMessage->data[0]  = Msg.data[0];
+    newMessage->data[1]  = Msg.data[1];
+    newMessage->data[2]  = Msg.data[2];
+    newMessage->data[3]  = Msg.data[3];
+    newMessage->data[4]  = Msg.data[4];
+    newMessage->data[5]  = Msg.data[5];
+    newMessage->data[6]  = Msg.data[6];
+    newMessage->data[7]  = Msg.data[7];
+    newMessage->id       = Msg.id;
+    newMessage->len      = Msg.len;
+	return CANIO_ERR_OK;
 }
 
 
@@ -204,22 +230,22 @@ tst_CAN_Handler_Entry CanHandlerList[] =
 
 
 //############################################################# Common Libs #################################################################
-ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_ParamListe ParameterTypeSelecotr)
+ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue)
 {
-    ten_CanErrorList result = CAN_ERR_OK;
-    uint16_t readValue = 0;
-    if(index >= HAL_IO_GET_ListSize()) return CAN_ERR_INDEX_OUTOFRANGE;
-    switch(IOList[index].IO_Type)
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint32_t readValue = 0;
+    if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
+    switch(GenericIOList[IOIndex].IO_Type)
     {
-        default: result = CAN_ERR_UNSUPPORTED; break;
-        case IO_INPUT_MV:   readValue = os_algin_mv(IOList[index].HAL_ID); break;
-        case IO_INPUT_CURR: readValue = LIB_current_calc(os_algin(IOList[index].HAL_ID)); break;
+        default: result = CANIO_ERR_UNSUPPORTED; break;
+        case IO_INPUT_MV:   readValue = os_algin_mv(GenericIOList[IOIndex].HAL_ID); break;
+        case IO_INPUT_CURR: readValue = __common_current_calc(os_algin(GenericIOList[IOIndex].HAL_ID)); break;
         case IO_OUTPUT_PROM:
         {
             uint16_t duty = 0;
-            switch(IOList[index].HAL_ID)
+            switch(GenericIOList[IOIndex].HAL_ID)
             {
-                default: result = CAN_ERR_UNSUPPORTED; break;
+                default: result = CANIO_ERR_UNSUPPORTED; break;
                 case OUT_HSD7: duty = os_pwm_duty_read[0].duty; break;
                 case OUT_HSD6: duty = os_pwm_duty_read[1].duty; break;
                 case OUT_HSD5: duty = os_pwm_duty_read[2].duty; break;
@@ -233,54 +259,63 @@ ten_CanErrorList __common_ReadValue(uint8_t IOIndex, uint32_t *pValue, ten_IO_Pa
         }break;
     }
 
-    if(result == CAN_ERR_OK)
+    if(result == CANIO_ERR_OK)
     {
-        if(readValue > IOList[index].actualValue_MAX) readValue = IOList[index].actualValue_MAX;
-        if(readValue < IOList[index].actualValue_MIN) readValue = IOList[index].actualValue_MIN;
-        IOList[index].actualValue = readValue;
-        IOList[index].actualValue_TS = HAL_SYS_GET_Millis();
-        *pReadValue = readValue;
+        if(readValue > GenericIOList[IOIndex].actualValue_MAX) readValue = GenericIOList[IOIndex].actualValue_MAX;
+        if(readValue < GenericIOList[IOIndex].actualValue_MIN) readValue = GenericIOList[IOIndex].actualValue_MIN;
+        GenericIOList[IOIndex].actualValue = readValue;
+        GenericIOList[IOIndex].actualValue_TS = HAL_SYS_GET_Millis();
+        *pValue = readValue;
     }
 
     
     return result;
 }
-ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue, ten_IO_ParamListe ParameterTypeSelecotr)
+ten_CanErrorList __common_WriteValue(uint8_t IOIndex, uint32_t newValue)
 {
-    ten_CanErrorList result = CAN_ERR_OK;
-    if(index >= HAL_IO_GET_ListSize()) return CAN_ERR_INDEX_OUTOFRANGE;
-    if(IOList[index].Enabled == 0) 
+    ten_CanErrorList result = CANIO_ERR_OK;
+    if(IOIndex >= LIB_IO_GET_ListSize()) return CANIO_ERR_INDEX_OUTOFRANGE;
+    if(GenericIOList[IOIndex].isEnabled == 0) 
     {
-        newValue = IOList[index].SafeValue;
-        result = CAN_ERR_OUTPUT_DISABLED;
+        newValue = GenericIOList[IOIndex].SafeValue;
+        result = CANIO_ERR_OUTPUT_DISABLED;
     }
-    if(IOList[index].actualValue_MIN > newValue) newValue = IOList[index].actualValue_MIN;
-    if(IOList[index].actualValue_MAX < newValue) newValue = IOList[index].actualValue_MAX;
+    if(GenericIOList[IOIndex].actualValue_MIN > newValue) newValue = GenericIOList[IOIndex].actualValue_MIN;
+    if(GenericIOList[IOIndex].actualValue_MAX < newValue) newValue = GenericIOList[IOIndex].actualValue_MAX;
 
-    switch(IOList[index].IO_Type)
+    switch(GenericIOList[IOIndex].IO_Type)
     {
-        case IO_OUTPUT_SW:      os_digout(IOList[index].HAL_ID, (uint8_t) newValue); break;
+        case IO_OUTPUT_SW:      os_digout(GenericIOList[IOIndex].HAL_ID, (uint8_t) newValue); break;
         case IO_OUTPUT_PROM:    
         {
-            switch(IOList[index].HAL_ID)
+            switch(GenericIOList[IOIndex].HAL_ID)
             {
-                default: result = CAN_ERR_UNSUPPORTED; break;
-                case OUT_HSD2:  os_pwm_duty_cycle (PWM_IO2, newValue, 500, 0, 0); break;
-                case OUT_HSD3:  os_pwm_duty_cycle (PWM_IO3, newValue, 500, 0, 0); break;
-                case OUT_HSD4:  os_pwm_duty_cycle (PWM_IO4, newValue, 500, 0, 0); break;
-                case OUT_HSD5:  os_pwm_duty_cycle (PWM_IO5, newValue, 500, 0, 0); break;
-                case OUT_HSD6:  os_pwm_duty_cycle (PWM_IO6, newValue, 500, 0, 0); break;
-                case OUT_HSD7:  os_pwm_duty_cycle (PWM_IO7, newValue, 500, 0, 0); break;
+                default: result = CANIO_ERR_UNSUPPORTED; break;
+                case OUT_HSD2:  os_pwm_duty_cycle (PWM_IO2, (uint16_t)newValue, 500, 0, 0); break;
+                case OUT_HSD3:  os_pwm_duty_cycle (PWM_IO3, (uint16_t)newValue, 500, 0, 0); break;
+                case OUT_HSD4:  os_pwm_duty_cycle (PWM_IO4, (uint16_t)newValue, 500, 0, 0); break;
+                case OUT_HSD5:  os_pwm_duty_cycle (PWM_IO5, (uint16_t)newValue, 500, 0, 0); break;
+                case OUT_HSD6:  os_pwm_duty_cycle (PWM_IO6, (uint16_t)newValue, 500, 0, 0); break;
+                case OUT_HSD7:  os_pwm_duty_cycle (PWM_IO7, (uint16_t)newValue, 500, 0, 0); break;
             }
         }break;
-        default: result = CAN_ERR_UNSUPPORTED;
+        default: result = CANIO_ERR_UNSUPPORTED;
     }
 
-    IOList[index].actualValue = newValue;
-    IOList[index].actualValue_TS = HAL_SYS_GET_Millis();
+    GenericIOList[IOIndex].actualValue = newValue;
+    GenericIOList[IOIndex].actualValue_TS = HAL_SYS_GET_Millis();
     
     
     return result;
+}   
+uint16_t            __common_current_calc            (uint16_t newValue)
+{
+    uint32_t CurrentValue = newValue;
+    CurrentValue = 226L * CurrentValue;
+    CurrentValue = CurrentValue * 119;
+    CurrentValue = CurrentValue / 100; // 1 Digit entspricht 2,26mA
+    CurrentValue = CurrentValue / 100; // 1 Digit entspricht 0,8337
+    return (uint16_t)CurrentValue;
 }
 
 

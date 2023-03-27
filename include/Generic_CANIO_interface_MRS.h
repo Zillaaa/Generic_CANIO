@@ -5,12 +5,12 @@
 // Include User Libs here
 #include "user_code.h"
 
-typedef TU8 uint8_t;
-typedef TU16 uint16_t;
-typedef TU32 uint32_t;
-typedef TS8 int8_t;
-typedef TS16 int16_t;
-typedef TS32 int32_t;
+//typedef TU8 uint8_t;
+//typedef TU16 uint16_t;
+//typedef TU32 uint32_t;
+//typedef TS8 int8_t;
+//typedef TS16 int16_t;
+//typedef TS32 int32_t;
 typedef bios_can_msg_typ sys_can_msg_t;
 
 typedef enum IO_List_Types
@@ -104,8 +104,8 @@ ten_CanErrorList    HAL_IO_SET_Output_mA        (uint8_t IOIndex, uint32_t pValu
 ten_CanErrorList    HAL_IO_GET_Input            (uint8_t index, ten_IO_Type IO_Type, uint32_t *pReadValue);
 ten_CanErrorList    HAL_IO_SET_Output           (uint8_t index, ten_IO_Type IO_Type, uint32_t newValue);
 ten_CanErrorList    HAL_CAN_SendMsg             (tst_CANIO_Msg *Data); // main.cpp
-ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, TstWJ1939_eTPLMsgData* pDest);
-ten_CanErrorList    HAL_ConvertFrom             (TstWJ1939_eTPLMsgData Msg, tst_CANIO_Msg* pDest);
+ten_CanErrorList    HAL_ConvertTo               (tst_CANIO_Msg Msg, sys_can_msg_t* pDest);
+ten_CanErrorList    HAL_ConvertFrom             (sys_can_msg_t Msg, tst_CANIO_Msg* pDest);
 ten_CanErrorList    HAL_update_SourceID         (uint8_t newSourceID);
 uint32_t            HAL_SYS_GET_Millis          (void);
 void                HAL_SYS_Get_SerialNumber    (char*, size_t);
@@ -119,6 +119,6 @@ ten_CanErrorList    HAL_WRITE_EEP               (void);
 tst_CANIO_Msg CAN_0x11_INPUT_GET_Generic        (tst_CANIO_Msg CanRxMessage);
 tst_CANIO_Msg CAN_0x30_OUTPUT_GETCURR_Generic   (tst_CANIO_Msg CanRxMessage);
 
-extern TstWVersion_eSWIdent CstApp_eSWIdent;
+
 
 #endif

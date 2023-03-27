@@ -1,7 +1,7 @@
 #ifndef GENERIC_CANIO_PUBLIC_H
 #define GENERIC_CANIO_PUBLIC_H
 
-#include "Generic_CANIO_interface_SPU7066.h"
+#include "Generic_CANIO\include\Generic_CANIO_interface_MRS.h"
 
 
 
@@ -9,7 +9,7 @@
 
 //############################################################# PUBLIC PIMARY CALL Funktionen #################################################################
 void                Generic_CAN_Init                (uint8_t Source_ID);
-tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage);
+sys_can_msg_t       Generic_CAN_HandleMessage       (sys_can_msg_t CanRxMessage);
 void                Generic_CAN_CycliqMessage       (void);
 
 

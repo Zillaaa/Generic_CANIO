@@ -17,7 +17,6 @@ void                Generic_CAN_Init                (uint8_t Source_ID)
 {
     int i=0;
     Generic_CAN_SourceID    = Source_ID;
-    Generic_CAN_SourceID    = CAN_ID_DEFAULT_SA;
     Generic_CAN_BusSpeed    = CAN_ID_DEFAULT_SPEEED;
     Generic_CAN_rxCounter   = 0; 
     Generic_CAN_txCounter   = 0; 
@@ -25,15 +24,15 @@ void                Generic_CAN_Init                (uint8_t Source_ID)
     Generic_CAN_txOverFlow  = 0;
     Generic_CAN_cmdCounter  = 0;
 
-    for(i=0; i<GenericIOList_sizeof; i++)
-    {
-        GenericIOList[i] = GenericIOList_DEFAULT[i];
-    }
 }
-tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage)
-{    
+sys_can_msg_t       Generic_CAN_HandleMessage       (sys_can_msg_t ReceivedMessage)
+{   
+    sys_can_msg_t Message2Send;
+    tst_CANIO_Msg CanRxMessage = LIB_CAN_clear(); 
     tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
-    int index = LIB_CAN_SearchHandler(CanRxMessage.data[0]);
+    int index = 0;
+    (void)HAL_ConvertFrom(ReceivedMessage, &CanRxMessage);
+    index = LIB_CAN_SearchHandler(CanRxMessage.data[0]);
     Generic_CAN_rxCounter++;
     if(index >= 0)
     {
@@ -48,7 +47,9 @@ tst_CANIO_Msg       Generic_CAN_HandleMessage       (tst_CANIO_Msg CanRxMessage)
         CanTxMessage =  LIB_0xFF_CMD_FEHLER_DEFAULT(CanRxMessage);
     }
 
-    return CanTxMessage;
+    (void)HAL_ConvertTo(CanTxMessage, &Message2Send);
+
+    return Message2Send;
 }
 void                Generic_CAN_CycliqMessage       (void)
 {    
@@ -204,7 +205,7 @@ tst_CANIO_Msg       LIB_0xFF_CMD_FEHLER_DEFAULT     (tst_CANIO_Msg CanRxMessage)
 
 ten_CanErrorList    LIB_IO_GET_ListIndex            (ten_IO_Type IO_Type, uint8_t HAL_ID, uint8_t *pIndex )
 {
-    int index = 0;
+    uint8_t index = 0;
     
     for(index = 0; index < LIB_IO_GET_ListSize(); index++)
     {
@@ -355,7 +356,8 @@ size_t ASC_vPrintInteger(char *intstr, void *i, ten_ASC_PrintType format)
         {
             while (divider>0)
             {
-                if ((digit = val/divider) > 0)
+                digit = val/divider;
+                if (digit > 0)
                 {
                     notzero = 1;
                 }
