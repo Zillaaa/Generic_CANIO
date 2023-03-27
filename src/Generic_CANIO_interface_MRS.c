@@ -29,27 +29,25 @@ tst_IO_List_Entry GenericIOList[] = {
     {IO_OUTPUT_SW   , OUT_HSD5                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
     {IO_OUTPUT_SW   , OUT_HSD6                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
     {IO_OUTPUT_SW   , OUT_HSD7                  , 1 , 1 , 0 , 0 , 0 , 1     , 0, NULL},
-    {IO_OUTPUT_PROM , OUT_HSD0                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},   // 8
-    {IO_OUTPUT_PROM , OUT_HSD1                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
-    {IO_OUTPUT_PROM , OUT_HSD2                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
+    {IO_OUTPUT_PROM , OUT_HSD2                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},   // 8
     {IO_OUTPUT_PROM , OUT_HSD3                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
     {IO_OUTPUT_PROM , OUT_HSD4                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
     {IO_OUTPUT_PROM , OUT_HSD5                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
     {IO_OUTPUT_PROM , OUT_HSD6                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
     {IO_OUTPUT_PROM , OUT_HSD7                  , 1 , 1 , 0 , 0 , 0 , 1000  , 0, NULL},
-    {IO_INPUT_MV    , ANA0                      , 0 , 0 , 0 , 0 , 0 , 34080 , 0, NULL},   // 16
+    {IO_INPUT_MV    , ANA0                      , 0 , 0 , 0 , 0 , 0 , 34080 , 0, NULL},   // 14
     {IO_INPUT_MV    , ANA1                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA2                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA3                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA4                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA5                      , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
-    {IO_INPUT_MV    , ANA_IO0                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},   // 22
+    {IO_INPUT_MV    , ANA_IO0                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},   // 20
     {IO_INPUT_MV    , ANA_IO1                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA_IO2                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA_IO3                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA_IO4                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
     {IO_INPUT_MV    , ANA_IO5                   , 0 , 0 , 0 , 0 , 0 , 12000 , 0, NULL},
-    {IO_INPUT_CURR  , STAT_ANA_HSD0             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},   // 28
+    {IO_INPUT_CURR  , STAT_ANA_HSD0             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},   // 26
     {IO_INPUT_CURR  , STAT_ANA_HSD1             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
     {IO_INPUT_CURR  , STAT_ANA_HSD2             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
     {IO_INPUT_CURR  , STAT_ANA_HSD3             , 0 , 0 , 0 , 0 , 0 , 2500  , 0, NULL},
@@ -193,6 +191,69 @@ ten_CanErrorList    HAL_ConvertFrom             (sys_can_msg_t Msg, tst_CANIO_Ms
 //############################################################# USER CAN Command List #################################################################
 // In den Lücken zwischen den "fixierten CMDS" , können eigene CAN Nachrichten eingefügt werden.
 
+tst_CANIO_Msg CAN_0x11_INPUT_Generic(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;    
+    uint32_t InputValue = 0;    
+    
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+    IO_Selector = CanRxMessage.data[0] - 0x11;
+
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 0, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 1, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 2, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 3, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 4, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 5, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (InputValue / 100L);
+    if(HAL_IO_GET_Input((IO_Selector * 7) + 14 + 6, IO_INPUT_MV, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[7] = (uint8_t) (InputValue / 100L);
+    
+    return  CanTxMessage;
+}   
+tst_LaufendeMittelwertBildung_Entry HSD[8] = {0};
+tst_CANIO_Msg CAN_0x30_OUTPUT_CURR(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;    
+    uint32_t InputValue = 0;    
+    
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+
+    
+    if(HAL_IO_GET_Input(26 + 0, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[0], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 1, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[2] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[1], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 2, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[3] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[2], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 3, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[4] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[3], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 4, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[5] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[4], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 5, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[6] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[5], (uint16_t)InputValue) / 100L);
+    if(HAL_IO_GET_Input(26 + 6, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[7] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[6], (uint16_t)InputValue) / 100L);
+    
+    return  CanTxMessage;
+}
+tst_CANIO_Msg CAN_0x31_OUTPUT_CURR(tst_CANIO_Msg CanRxMessage)
+{
+    tst_CANIO_Msg CanTxMessage = LIB_CAN_clear();
+    ten_CanErrorList result = CANIO_ERR_OK;
+    uint8_t IO_Selector = 0;    
+    uint32_t InputValue = 0;    
+    
+    CanTxMessage.id = LIB_CAN_Switch_RXTX(CanRxMessage.id);
+    CanTxMessage.len = 8;
+    
+    CanTxMessage.data[0] = CanRxMessage.data[0]; // MUX0
+
+    if(HAL_IO_GET_Input(26 + 7, IO_INPUT_CURR, &InputValue) == CANIO_ERR_OK) CanTxMessage.data[1] = (uint8_t) (LIB_Mittwerlwertbildung(&HSD[7], (uint16_t)InputValue) / 100L);
+    
+    return  CanTxMessage;
+}
 
 tst_CAN_Handler_Entry CanHandlerList[] = 
 {   
@@ -212,10 +273,15 @@ tst_CAN_Handler_Entry CanHandlerList[] =
     { 0x06  , 0 , 0     , 0 , 0 , CAN_0x06_SYS_ProjectName          },
     // Input              
     { 0x10  , 0 , 200   , 0 , 0 , CAN_0x10_INPUT_GET                },
+    { 0x11  , 1 , 100   , 0 , 0 , CAN_0x11_INPUT_Generic            },
+    { 0x12  , 1 , 100   , 0 , 0 , CAN_0x11_INPUT_Generic            },
     // Output                 
     { 0x20  , 0 , 0     , 0 , 0 , CAN_0x20_OUTPUT_SET               },
     { 0x21  , 0 , 0     , 0 , 0 , CAN_0x21_OUTPUT_SAVESTATE         },
     { 0x22  , 0 , 0     , 0 , 0 , CAN_0x22_OUTPUT_SWITCHOFF         },
+    // Output CURR                 
+    { 0x30  , 1 , 100   , 0 , 0 , CAN_0x30_OUTPUT_CURR               },
+    { 0x31  , 1 , 100   , 0 , 0 , CAN_0x31_OUTPUT_CURR               },
     // Allgemeine Steuergeräte Befehle
     { 0xA0  , 0 , 0     , 0 , 0 , CAN_0xA0_CMD_BAUDRATE             },
     { 0xA1  , 0 , 0     , 0 , 0 , CAN_0xA1_CMD_SOURCE_ADR           },

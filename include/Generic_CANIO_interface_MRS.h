@@ -65,8 +65,8 @@ typedef struct IOConfigList
     uint8_t isOutput;
     uint32_t SafeValue;
     uint32_t actualValue;    
-    uint32_t actualValue_MAX ;
     uint32_t actualValue_MIN;
+    uint32_t actualValue_MAX;
     uint32_t actualValue_TS;    
     void* pCustomData;
 }tst_IO_List_Entry;

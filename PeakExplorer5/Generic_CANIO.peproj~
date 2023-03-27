@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PCANExplorerProject Version="5.0" Name="Generic_CANIO">
     <Connections AutoReset="0" IgnoreRTRLength="0" ProcessRTR="1" ProcessJ1939Requests="1" CTSPacksCount="255" ReCTSCount="3" RTSPacksCount="255" RetriesCount="3">
-        <Connection Bus="1" Enabled="1" Protocol="1" CalcBusLoad="1" SymbolsFileName="GenericCANIO_SPU7066.sym" BitRate="284" J1939Name="0" ClaimAddressOnStartup="0" PreferredAddress="0" Monitoring="1" AddressingProtocolEnabled="0" ReassembleIncomingPackets="1" Connection="SPU7066_Flash@pcan_usb" Name="Verbindung1"/>
+        <Connection Bus="1" Enabled="1" Protocol="1" CalcBusLoad="1" SymbolsFileName="GenericCANIO_SPU7066.sym" BitRate="284" J1939Name="0" ClaimAddressOnStartup="0" PreferredAddress="0" Monitoring="1" AddressingProtocolEnabled="0" ReassembleIncomingPackets="1" Connection="MRS@pcan_usb" Name="Verbindung1"/>
     </Connections>
     <MessageFilters>
         <MessageFilter Name="Strings">
@@ -9,12 +9,11 @@
         </MessageFilter>
     </MessageFilters>
     <TransmitList>
-        <TransmitListItem Bus="1" CanId="418320385" Type="2" DLC="8" Data="01" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="02" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="03" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="04" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="05" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="06" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="01" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="02" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="03" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="05" Creator="Benutzer" DA="204" Destination="204"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="06" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="102D02" Creator="Benutzer" DA="16" Destination="16"/>
         <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="206B04E80318DC" Creator="Benutzer" DA="16" Destination="16"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A0" Creator="Benutzer" DA="204" Destination="204"/>
@@ -23,7 +22,7 @@
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="22080043E0" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="A213F401" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="206B04F40118DC" Creator="Benutzer" DA="16" Destination="16"/>
-        <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="04" Creator="Benutzer" DA="16" Destination="16"/>
+        <TransmitListItem Bus="1" CanId="418368512" Type="2" DLC="8" Data="04" Creator="Benutzer" DA="204" Destination="204"/>
         <TransmitListItem Bus="1" CanId="418320384" Type="2" DLC="8" Data="206B04000018DC" Creator="Benutzer" DA="16" Destination="16"/>
     </TransmitList>
     <Files>
